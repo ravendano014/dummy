@@ -1,8 +1,850 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title></title>
+  <meta charset="UTF-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Complete Human Skeleton Control</title>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    canvas {
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      display: block;
+    }
+    
+    /* Control Panel */
+    .control-panel {
+      position: absolute;
+      background: rgba(30, 30, 40, 0.85);
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      color: white;
+      z-index: 10;
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .control-panel.left {
+      left: 15px;
+      top: 15px;
+      width: 220px;
+    }
+    
+    .control-panel.right {
+      right: 15px;
+      top: 15px;
+      width: 240px;
+    }
+    
+    .control-panel.hands {
+      left: 15px;
+      bottom: 15px;
+      width: 240px;
+    }
+    
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .panel-header h2 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #7fdbff;
+        display: flex;
+        align-items: center;
+    }
+
+    .panel-header h2 i {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+
+    .collapse-icon {
+      transition: transform 0.3s ease;
+      font-size: 16px;
+    }
+
+    .collapse-icon.rotated {
+      transform: rotate(180deg);
+    }
+
+    .panel-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      max-height: 1000px;
+      opacity: 1;
+    }
+
+    .panel-content.collapsed {
+      max-height: 0;
+      opacity: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+    
+    .control-group {
+      margin-bottom: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 10px;
+    }
+    
+    .control-group:last-child {
+      border-bottom: none;
+    }
+    
+    .control-group h3 {
+      margin: 0 0 10px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #7fdbff;
+      display: flex;
+      align-items: center;
+    }
+    
+    .control-group h3 i {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+    
+    .slider-container {
+      padding: 10px 0;
+    }
+    
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+    
+    .slider {
+      width: 100%;
+      height: 6px;
+      -webkit-appearance: none;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      outline: none;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #7fdbff;
+      cursor: pointer;
+    }
+    
+    .status-label {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .status-label i {
+      margin-right: 8px;
+    }
+    
+    @media (max-width: 768px) {
+      .control-panel {
+        padding: 8px;
+      }
+      
+      .control-panel.left {
+        width: 180px;
+      }
+      
+      .control-panel.right {
+        width: 180px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <canvas id="renderCanvas"></canvas>
+  
+  <div class="control-panel left" id="bodyControls">
+    <div class="panel-header">
+      <h2><i class="fas fa-user"></i> Body Controls</h2>
+      <i class="fas fa-chevron-up collapse-icon"></i>
+    </div>
+    <div class="panel-content">
+      <div class="control-group">
+        <h3><i class="fas fa-undo-alt"></i> Spine Rotation</h3>
+        <div class="slider-container">
+          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="spineRotationSlider">
+        </div>
+      </div>
+      
+      <div class="control-group">
+        <h3><i class="fas fa-arrows-alt-v"></i> Spine Bend</h3>
+        <div class="slider-container">
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="spineBendSlider">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3><i class="fas fa-arrows-alt-h"></i> Spine Twist</h3>
+        <div class="slider-container">
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="spineTwistSlider">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="control-panel right" id="limbControls">
+    <div class="panel-header">
+      <h2><i class="fas fa-project-diagram"></i> Limb Controls</h2>
+      <i class="fas fa-chevron-up collapse-icon"></i>
+    </div>
+    <div class="panel-content">
+      <div class="control-group">
+        <h3><i class="fas fa-hand-paper"></i> Left Arm</h3>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Shoulder</span>
+          </div>
+          <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="leftShoulderSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Elbow</span>
+          </div>
+          <input type="range" min="0" max="2.5" step="0.01" value="0" class="slider" id="leftElbowSlider">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3><i class="fas fa-hand-paper"></i> Right Arm</h3>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Shoulder</span>
+          </div>
+          <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="rightShoulderSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Elbow</span>
+          </div>
+          <input type="range" min="0" max="2.5" step="0.01" value="0" class="slider" id="rightElbowSlider">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3><i class="fas fa-walking"></i> Left Leg</h3>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Hip</span>
+          </div>
+          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="leftHipSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Knee</span>
+          </div>
+          <input type="range" min="0" max="2.0" step="0.01" value="0" class="slider" id="leftKneeSlider">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3><i class="fas fa-walking"></i> Right Leg</h3>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Hip</span>
+          </div>
+          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="rightHipSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Knee</span>
+          </div>
+          <input type="range" min="0" max="2.0" step="0.01" value="0" class="slider" id="rightKneeSlider">
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="control-panel hands" id="handControls">
+    <div class="panel-header">
+      <h2><i class="fas fa-hand-paper"></i> Hand Controls</h2>
+      <i class="fas fa-chevron-up collapse-icon"></i>
+    </div>
+    <div class="panel-content">
+      <div class="control-group">
+        <h3><i class="fas fa-hand-point-left"></i> Left Hand</h3>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Wrist</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="leftWristSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Fingers Spread</span>
+          </div>
+          <input type="range" min="0" max="0.5" step="0.01" value="0" class="slider" id="leftFingerSpreadSlider">
+        </div>
+      </div>
+
+      <div class="control-group">
+        <h3><i class="fas fa-hand-point-right"></i> Right Hand</h3>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Wrist</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="rightWristSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Fingers Spread</span>
+          </div>
+          <input type="range" min="0" max="0.5" step="0.01" value="0" class="slider" id="rightFingerSpreadSlider">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-label" id="statusLabel">
+    <i class="fas fa-circle-notch fa-spin"></i>
+    <span>System Ready</span>
+  </div>
+
+  <script>
+    // Global configuration
+    const CONFIG = {
+      rotationSpeed: 0.04,
+      modelBaseUrl: "https://raw.githubusercontent.com/ravendano014/dummy/main/Individual%20parts%20-%20armor/",
+      groundTextureUrl: "http://upload.wikimedia.org/wikipedia/commons/4/45/Blender3D_BW_Grid_256.png"
+    };
+
+    // Engine initialization
+    const canvas = document.getElementById("renderCanvas");
+    const engine = new BABYLON.Engine(canvas, true);
+    let camera;
+
+    // Create human skeleton components
+    const createHumanSkeleton = (scene) => {
+      const skeleton = {};
+      
+      // Helper function to create a bone
+      const createBone = (name, length, diameter, position, rotation, parent, color) => {
+        const bone = BABYLON.MeshBuilder.CreateCylinder(name, {
+          height: length,
+          diameterTop: diameter,
+          diameterBottom: diameter,
+          tessellation: 6
+        }, scene);
+        
+        bone.position = position;
+        bone.rotation = rotation;
+        bone.parent = parent;
+        bone.material = new BABYLON.StandardMaterial(name + "Mat", scene);
+        bone.material.diffuseColor = color || new BABYLON.Color3(0.8, 0.8, 0.8);
+        bone.material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+        
+        return bone;
+      };
+      
+      // Helper function to create a joint
+      const createJoint = (name, size, position, parent, color) => {
+        const joint = BABYLON.MeshBuilder.CreateSphere(name, { diameter: size }, scene);
+        joint.position = position;
+        joint.parent = parent;
+        joint.material = new BABYLON.StandardMaterial(name + "Mat", scene);
+        joint.material.diffuseColor = color || new BABYLON.Color3(0.6, 0.6, 0.6);
+        
+        return joint;
+      };
+
+      // Create hands with fingers
+      const createHand = (side, wristJoint, scene) => {
+        const hand = {};
+        const isLeft = side === 'left';
+        const sign = isLeft ? -1 : 1;
+        const thumbColor = new BABYLON.Color3(0.9, 0.7, 0.7);
+        const fingerColor = new BABYLON.Color3(0.7, 0.7, 0.9);
+
+        // Wrist
+        hand.wrist = createJoint(`${side}Wrist`, 3, 
+          new BABYLON.Vector3(sign * 30, 20, 0), wristJoint, scene);
+
+        // Palm
+        hand.palm = createBone(`${side}Palm`, 6, 3, 
+          new BABYLON.Vector3(sign * 33, 20, 0), 
+          new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
+          hand.wrist, new BABYLON.Color3(0.8, 0.8, 0.8));
+
+        // Thumb
+        hand.thumb1 = createBone(`${side}Thumb1`, 3, 1, 
+          new BABYLON.Vector3(sign * 36, 20, sign * 1.5), 
+          new BABYLON.Vector3(0, sign * Math.PI/4, sign * Math.PI/4), 
+          hand.palm, thumbColor);
+        
+        hand.thumb2 = createBone(`${side}Thumb2`, 2.5, 0.8, 
+          new BABYLON.Vector3(sign * 38.5, 20, sign * 3), 
+          new BABYLON.Vector3(0, sign * Math.PI/4, sign * Math.PI/4), 
+          hand.thumb1, thumbColor);
+
+        // Fingers
+        const fingerPositions = [17.5, 20, 22.5, 25]; // Y positions for each finger
+        const fingerNames = ['Index', 'Middle', 'Ring', 'Pinky'];
+        
+        fingerNames.forEach((name, i) => {
+          // Metacarpal (palm bone)
+          hand[`${name}Meta`] = createBone(`${side}${name}Meta`, 3, 1, 
+            new BABYLON.Vector3(sign * 36, fingerPositions[i], 0), 
+            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
+            hand.palm, fingerColor);
+          
+          // Proximal phalanx
+          hand[`${name}Prox`] = createBone(`${side}${name}Prox`, 2.5, 0.8, 
+            new BABYLON.Vector3(sign * 38.5, fingerPositions[i], 0), 
+            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
+            hand[`${name}Meta`], fingerColor);
+          
+          // Intermediate phalanx
+          hand[`${name}Inter`] = createBone(`${side}${name}Inter`, 2, 0.6, 
+            new BABYLON.Vector3(sign * 40.5, fingerPositions[i], 0), 
+            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
+            hand[`${name}Prox`], fingerColor);
+          
+          // Distal phalanx
+          hand[`${name}Dist`] = createBone(`${side}${name}Dist`, 1.5, 0.5, 
+            new BABYLON.Vector3(sign * 42, fingerPositions[i], 0), 
+            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
+            hand[`${name}Inter`], fingerColor);
+        });
+
+        return hand;
+      };
+
+      // Root/pelvis - the center of the skeleton
+      skeleton.pelvis = createJoint("pelvis", 10, new BABYLON.Vector3(0, 0, 0), null, scene);
+      
+      // Spine
+      skeleton.spineLower = createBone("spineLower", 15, 5, 
+        new BABYLON.Vector3(0, 7.5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.pelvis, scene);
+      
+      skeleton.spineMiddle = createBone("spineMiddle", 15, 4, 
+        new BABYLON.Vector3(0, 15, 0), new BABYLON.Vector3(0, 0, 0), skeleton.spineLower, scene);
+      
+      skeleton.spineUpper = createBone("spineUpper", 15, 3, 
+        new BABYLON.Vector3(0, 22.5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.spineMiddle, scene);
+      
+      skeleton.neck = createBone("neck", 5, 3, 
+        new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.spineUpper, scene);
+      
+      skeleton.head = createJoint("head", 8, 
+        new BABYLON.Vector3(0, 5, 0), skeleton.neck, scene);
+      
+      // Shoulders and arms
+      skeleton.leftShoulder = createJoint("leftShoulder", 5, 
+        new BABYLON.Vector3(-5, -27.5, 0), skeleton.spineUpper, scene);
+      
+      skeleton.leftUpperArm = createBone("leftUpperArm", 15, 3, 
+        new BABYLON.Vector3(-7.5, 20, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftShoulder, scene);
+      
+      skeleton.leftElbow = createJoint("leftElbow", 4, 
+        new BABYLON.Vector3(-15, 20, 0), skeleton.leftUpperArm, scene);
+      
+      skeleton.leftLowerArm = createBone("leftLowerArm", 15, 2.5, 
+        new BABYLON.Vector3(-22.5, 20, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftElbow, scene);
+      
+      skeleton.leftWrist = createJoint("leftWrist", 3, 
+        new BABYLON.Vector3(-30, 20, 0), skeleton.leftLowerArm, scene);
+      
+      // Right arm (mirror of left)
+      skeleton.rightShoulder = createJoint("rightShoulder", 5, 
+        new BABYLON.Vector3(5, -27.5, 0), skeleton.spineUpper, scene);
+      
+      skeleton.rightUpperArm = createBone("rightUpperArm", 15, 3, 
+        new BABYLON.Vector3(7.5, 20, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightShoulder, scene);
+      
+      skeleton.rightElbow = createJoint("rightElbow", 4, 
+        new BABYLON.Vector3(15, 20, 0), skeleton.rightUpperArm, scene);
+      
+      skeleton.rightLowerArm = createBone("rightLowerArm", 15, 2.5, 
+        new BABYLON.Vector3(22.5, 20, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightElbow, scene);
+      
+      skeleton.rightWrist = createJoint("rightWrist", 3, 
+        new BABYLON.Vector3(30, 20, 0), skeleton.rightLowerArm, scene);
+      
+      // Legs
+      skeleton.leftHip = createJoint("leftHip", 5, 
+        new BABYLON.Vector3(-3, -5, 0), skeleton.pelvis, scene);
+      
+      skeleton.leftUpperLeg = createBone("leftUpperLeg", 20, 4, 
+        new BABYLON.Vector3(-3, -5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.leftHip, scene);
+      
+      skeleton.leftKnee = createJoint("leftKnee", 4, 
+        new BABYLON.Vector3(-3, -25, 0), skeleton.leftUpperLeg, scene);
+      
+      skeleton.leftLowerLeg = createBone("leftLowerLeg", 20, 3.5, 
+        new BABYLON.Vector3(-3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.leftKnee, scene);
+      
+      skeleton.leftAnkle = createJoint("leftAnkle", 3, 
+        new BABYLON.Vector3(-3, -45, 0), skeleton.leftLowerLeg, scene);
+      
+      skeleton.leftFoot = createBone("leftFoot", 10, 2.5, 
+        new BABYLON.Vector3(-3, -5, 5), new BABYLON.Vector3(Math.PI/4, 0, 0), skeleton.leftAnkle, scene);
+      
+      // Right leg (mirror of left)
+      skeleton.rightHip = createJoint("rightHip", 5, 
+        new BABYLON.Vector3(3, -5, 0), skeleton.pelvis, scene);
+      
+      skeleton.rightUpperLeg = createBone("rightUpperLeg", 20, 4, 
+        new BABYLON.Vector3(3, -5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.rightHip, scene);
+      
+      skeleton.rightKnee = createJoint("rightKnee", 4, 
+        new BABYLON.Vector3(3, -25, 0), skeleton.rightUpperLeg, scene);
+      
+      skeleton.rightLowerLeg = createBone("rightLowerLeg", 20, 3.5, 
+        new BABYLON.Vector3(3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.rightKnee, scene);
+      
+      skeleton.rightAnkle = createJoint("rightAnkle", 3, 
+        new BABYLON.Vector3(3, -45, 0), skeleton.rightLowerLeg, scene);
+      
+      skeleton.rightFoot = createBone("rightFoot", 10, 2.5, 
+        new BABYLON.Vector3(3, -5, 5), new BABYLON.Vector3(Math.PI/4, 0, 0), skeleton.rightAnkle, scene);
+      
+      // Create hands with fingers
+      skeleton.leftHand = createHand('left', skeleton.leftWrist, scene);
+      skeleton.rightHand = createHand('right', skeleton.rightWrist, scene);
+
+      return skeleton;
+    };
+
+
+    // Helper functions to create components
+    const createMaterial = (scene, color) => {
+      const mat = new BABYLON.StandardMaterial("mat", scene);
+      mat.diffuseColor = color;
+      return mat;
+    };
+
+    const createDisc = (name, radius, position, parent, scene) => {
+      const disc = BABYLON.MeshBuilder.CreateDisc(name, { radius, tessellation: 50 }, scene);
+      disc.position = position;
+      disc.parent = parent;
+      disc.material = createMaterial(scene, new BABYLON.Color3(0.6, 0.6, 0.6));
+      return disc;
+    };
+
+    const createBox = (name, options, position, parent, scene) => {
+      const box = BABYLON.MeshBuilder.CreateBox(name, options, scene);
+      box.position = position;
+      box.parent = parent;
+      box.material = createMaterial(scene, new BABYLON.Color3(0.8, 0.8, 0.8));
+      return box;
+    };
+
+    // STL models loading
+    const loadSTLModels = (scene, skeleton) => {
+      const modelConfigs = [
+        { name: "armor-head.stl", parent: skeleton.head, position: [6, 0, 0], rotation: [0, 0, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-neck.stl", parent: skeleton.neck, position: [-3, 0, 0], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-abdomen.stl", parent: skeleton.spineLower, position: [0, 2, 0], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-outer-chest.stl", parent: skeleton.spineMiddle, position: [0, 18, 0], rotation: [3.141592653589793, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-waist.stl", parent: skeleton.pelvis, position: [-10, -8, 7], rotation: [-1.5707963267948966, 0,  0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-crotch.stl", parent: skeleton.pelvis, position: [0, -5, -2], rotation: [-1.5707963267948966, 0, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shoulder-2x.stl", parent: skeleton.leftUpperArm, position: [0, 0, 5], rotation: [0, 3.141592653589793, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shoulder-2x.stl", parent: skeleton.rightUpperArm, position: [0, 0, -5], rotation: [3.141592653589793, -3.141592653589793, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-upper-arm-2x.stl", parent: skeleton.leftUpperArm, position: [-10, 0, -3], rotation: [0, 1.5707963267948966, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-forearm-2x.stl", parent: skeleton.rightLowerArm, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-forearm-2x.stl", parent: skeleton.leftLowerArm, position: [-10, 0, -3], rotation: [0, 1.5707963267948966, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-upper-arm-2x.stl", parent: skeleton.rightUpperArm, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-foot-2x.stl", parent: skeleton.leftFoot, position: [-10, 0, -3], rotation: [0, 1.5707963267948966, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-foot-2x.stl", parent: skeleton.rightFoot, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-hip-2x.stl", parent: skeleton.leftUpperLeg, position: [0, 0, -7], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-hip-2x.stl", parent: skeleton.rightUpperLeg, position: [0, 0, 5], rotation: [0, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-thigh-2x.stl", parent: skeleton.leftUpperLeg, position: [-4, 0, -7], rotation: [0, 1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },
+        { name: "armor-thigh-2x.stl", parent: skeleton.rightUpperLeg, position: [-4, 0, -7], rotation: [0, 1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },        
+        { name: "armor-knee-2x.stl", parent: skeleton.leftKnee, position: [-10, 0, -3], rotation: [0, 1.5707963267948966, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-knee-2x.stl", parent: skeleton.rightKnee, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shin-2x.stl", parent: skeleton.leftKnee, position: [0, 0, -2], rotation: [1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shin-2x.stl", parent: skeleton.rightKnee, position: [-6, 0, -2], rotation: [1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
+      ];
+
+      modelConfigs.forEach(config => {
+        BABYLON.SceneLoader.ImportMesh(
+          "", 
+          CONFIG.modelBaseUrl, 
+          config.name, 
+          scene, 
+          (newMeshes) => setupImportedMesh(newMeshes[0], config, scene)
+        );
+      });
+    };
+
+    const setupImportedMesh = (mesh, config, scene) => {
+      mesh.setPivotPoint(new BABYLON.Vector3(0, 0, 0));
+      mesh.parent = config.parent;
+      mesh.position = new BABYLON.Vector3(...config.position);
+      mesh.rotation = new BABYLON.Vector3(...config.rotation);
+      mesh.material = new BABYLON.StandardMaterial("importedMeshMaterial", scene);
+      mesh.material.diffuseColor = new BABYLON.Color3(...config.color);
+    };
+
+
+    // Setup camera
+    const setupCamera = (scene) => {
+      const cam = new BABYLON.ArcRotateCamera(
+        "Camera",
+        Math.PI / 1.33,
+        0.9,
+        500, 
+        new BABYLON.Vector3(0, 100, 0),
+        scene
+      );
+      cam.attachControl(canvas, false);
+      return cam;
+    };
+
+    // Setup light
+    const setupLight = (scene) => {
+      return new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    };
+
+    // Setup ground
+    const setupGround = (scene) => {
+      const ground = BABYLON.Mesh.CreateGround("ground", 100, 100, 1, scene);
+      const groundMat = new BABYLON.StandardMaterial("groundMat", scene);
+      groundMat.diffuseTexture = new BABYLON.Texture(CONFIG.groundTextureUrl, scene);
+      groundMat.specularColor = BABYLON.Color3.Black();
+      ground.material = groundMat;
+      return ground;
+    };
+
+    // Status update function
+    const updateStatus = (message, isError = false) => {
+      const statusLabel = document.getElementById("statusLabel");
+      statusLabel.innerHTML = `<i class="fas fa-${isError ? 'exclamation-circle' : 'check-circle'}"></i><span>${message}</span>`;
+      
+      if (isError) {
+        statusLabel.style.color = '#ff6b6b';
+      } else {
+        statusLabel.style.color = 'white';
+      }
+      
+      if (!isError) {
+        setTimeout(() => {
+          statusLabel.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i><span>System Ready</span>`;
+          statusLabel.style.color = 'white';
+        }, 3000);
+      }
+    };
+
+    // Setup HTML controls for the skeleton
+    const setupSkeletonControls = (skeleton) => {
+      // Spine controls
+      document.getElementById("spineRotationSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.spineLower.rotation.y = value;
+        skeleton.spineMiddle.rotation.y = value;
+        skeleton.spineUpper.rotation.y = value;
+        updateStatus("Spine rotated");
+      });
+      
+      document.getElementById("spineBendSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.spineLower.rotation.x = value;
+        skeleton.spineMiddle.rotation.x = value;
+        skeleton.spineUpper.rotation.x = value;
+        updateStatus("Spine bent");
+      });
+
+      document.getElementById("spineTwistSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.spineLower.rotation.z = value;
+        skeleton.spineMiddle.rotation.z = value;
+        skeleton.spineUpper.rotation.z = value;
+        updateStatus("Spine twisted");
+      });
+      
+      // Left arm controls
+      document.getElementById("leftShoulderSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftUpperArm.rotation.z = Math.PI/2 + value;
+        updateStatus("Left shoulder adjusted");
+      });
+
+      document.getElementById("leftElbowSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftLowerArm.rotation.z = Math.PI/2 + value;
+        updateStatus("Left elbow adjusted");
+      });
+      
+      // Right arm controls
+      document.getElementById("rightShoulderSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightUpperArm.rotation.z = -Math.PI/2 + value;
+        updateStatus("Right shoulder adjusted");
+      });
+
+      document.getElementById("rightElbowSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightLowerArm.rotation.z = -Math.PI/2 + value;
+        updateStatus("Right elbow adjusted");
+      });
+      
+      // Left leg controls
+      document.getElementById("leftHipSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftUpperLeg.rotation.x = value;
+        updateStatus("Left hip adjusted");
+      });
+
+      document.getElementById("leftKneeSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftLowerLeg.rotation.x = value;
+        updateStatus("Left knee adjusted");
+      });
+      
+      // Right leg controls
+      document.getElementById("rightHipSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightUpperLeg.rotation.x = value;
+        updateStatus("Right hip adjusted");
+      });
+
+      document.getElementById("rightKneeSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightLowerLeg.rotation.x = value;
+        updateStatus("Right knee adjusted");
+      });
+
+      // Hand controls
+      document.getElementById("leftWristSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftHand.wrist.rotation.z = value;
+        updateStatus("Left wrist rotated");
+      });
+
+      document.getElementById("rightWristSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightHand.wrist.rotation.z = -value;
+        updateStatus("Right wrist rotated");
+      });
+
+      document.getElementById("leftFingerSpreadSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        const fingers = ['Index', 'Middle', 'Ring', 'Pinky'];
+        fingers.forEach((finger, i) => {
+          const spread = value * (i - 1.5); // Creates fan effect
+          skeleton.leftHand[`${finger}Meta`].rotation.y = spread * 0.5;
+        });
+        updateStatus("Left fingers spread");
+      });
+
+      document.getElementById("rightFingerSpreadSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        const fingers = ['Index', 'Middle', 'Ring', 'Pinky'];
+        fingers.forEach((finger, i) => {
+          const spread = -value * (i - 1.5); // Creates fan effect
+          skeleton.rightHand[`${finger}Meta`].rotation.y = spread * 0.5;
+        });
+        updateStatus("Right fingers spread");
+      });
+
+      // Keyboard controls for fingers
+      window.addEventListener("keydown", (event) => {
+        const fingerJoints = ['Prox', 'Inter', 'Dist'];
+        
+        // Left hand finger curl (1-4 for left hand fingers)
+        if (event.key >= '1' && event.key <= '4') {
+          const fingerIndex = parseInt(event.key) - 1;
+          const fingerNames = ['Index', 'Middle', 'Ring', 'Pinky'];
+          const finger = fingerNames[fingerIndex];
+          
+          fingerJoints.forEach(joint => {
+            skeleton.leftHand[`${finger}${joint}`].rotation.x += CONFIG.rotationSpeed;
+          });
+          updateStatus(`Left ${finger.toLowerCase()} finger curl`);
+        }
+        
+        // Right hand finger curl (6-9 for right hand fingers)
+        if (event.key >= '6' && event.key <= '9') {
+          const fingerIndex = parseInt(event.key) - 6;
+          const fingerNames = ['Index', 'Middle', 'Ring', 'Pinky'];
+          const finger = fingerNames[fingerIndex];
+          
+          fingerJoints.forEach(joint => {
+            skeleton.rightHand[`${finger}${joint}`].rotation.x += CONFIG.rotationSpeed;
+          });
+          updateStatus(`Right ${finger.toLowerCase()} finger curl`);
+        }
+        
+        // Thumb controls (5 for left, 0 for right)
+        if (event.key === '5') {
+          skeleton.leftHand.thumb1.rotation.y += CONFIG.rotationSpeed;
+          skeleton.leftHand.thumb2.rotation.y += CONFIG.rotationSpeed;
+          updateStatus("Left thumb movement");
+        }
+        if (event.key === '0') {
+          skeleton.rightHand.thumb1.rotation.y -= CONFIG.rotationSpeed;
+          skeleton.rightHand.thumb2.rotation.y -= CONFIG.rotationSpeed;
+          updateStatus("Right thumb movement");
+        }
+      });
+    };
+
+    // Main scene creation
+    const createScene = () => {
+      const scene = new BABYLON.Scene(engine);
+      scene.clearColor = new BABYLON.Color3(0, 0, 0.2);
+      
+      camera = setupCamera(scene);
+      setupLight(scene);
+      setupGround(scene);
+      
+      const skeleton = createHumanSkeleton(scene);
+      setupSkeletonControls(skeleton);
+      loadSTLModels(scene, skeleton);
+      
+      return scene;
+    };
+
+    // Initialize the scene
+    const scene = createScene();
     
+    engine.runRenderLoop(() => {
+      scene.render();
+    });
+
+    window.addEventListener('resize', () => {
+      engine.resize();
+    });
+
+    // Initial status update
+    updateStatus("Human skeleton loaded");
+  </script>
 </body>
 </html>
