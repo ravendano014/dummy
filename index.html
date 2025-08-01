@@ -342,7 +342,7 @@
     const CONFIG = {
       rotationSpeed: 0.04,
       modelBaseUrl: "https://raw.githubusercontent.com/ravendano014/dummy/main/Individual%20parts%20-%20armor/",
-      groundTextureUrl: "http://upload.wikimedia.org/wikipedia/commons/4/45/Blender3D_BW_Grid_256.png"
+      groundTextureUrl: ""
     };
 
     // Engine initialization
@@ -514,7 +514,7 @@
         new BABYLON.Vector3(-3, -45, 0), skeleton.leftLowerLeg, scene);
       
       skeleton.leftFoot = createBone("leftFoot", 10, 2.5, 
-        new BABYLON.Vector3(-3, -5, 5), new BABYLON.Vector3(Math.PI/4, 0, 0), skeleton.leftAnkle, scene);
+        new BABYLON.Vector3(9, 15, 5), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.leftAnkle, scene);
       
       // Right leg (mirror of left)
       skeleton.rightHip = createJoint("rightHip", 5, 
@@ -533,7 +533,7 @@
         new BABYLON.Vector3(3, -45, 0), skeleton.rightLowerLeg, scene);
       
       skeleton.rightFoot = createBone("rightFoot", 10, 2.5, 
-        new BABYLON.Vector3(3, -5, 5), new BABYLON.Vector3(Math.PI/4, 0, 0), skeleton.rightAnkle, scene);
+        new BABYLON.Vector3(-10, 15, 5), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.rightAnkle, scene);
       
       // Create hands with fingers
       skeleton.leftHand = createHand('left', skeleton.leftWrist, scene);
@@ -569,30 +569,30 @@
     // STL models loading
     const loadSTLModels = (scene, skeleton) => {
       const modelConfigs = [
-        { name: "armor-head.stl", parent: skeleton.head, position: [6, 0, 0], rotation: [0, 0, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
-        { name: "armor-neck.stl", parent: skeleton.neck, position: [-3, 0, 0], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-abdomen.stl", parent: skeleton.spineLower, position: [0, 2, 0], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-outer-chest.stl", parent: skeleton.spineMiddle, position: [0, 18, 0], rotation: [3.141592653589793, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-waist.stl", parent: skeleton.pelvis, position: [-10, -8, 7], rotation: [-1.5707963267948966, 0,  0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-crotch.stl", parent: skeleton.pelvis, position: [0, -5, -2], rotation: [-1.5707963267948966, 0, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-head.stl", parent: skeleton.head, position: [-6, 0, 0], rotation: [0, 3.141592653589793, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-neck.stl", parent: skeleton.neck, position: [3, 0, 0], rotation: [0, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-abdomen.stl", parent: skeleton.spineLower, position: [0, 2, 0], rotation: [0, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-outer-chest.stl", parent: skeleton.spineMiddle, position: [0, 18, 0], rotation: [3.141592653589793, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-waist.stl", parent: skeleton.pelvis, position: [10, -8, -7], rotation: [-1.5707963267948966, 3.141592653589793,  0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-crotch.stl", parent: skeleton.pelvis, position: [0, -5, 2], rotation: [-1.5707963267948966, 3.141592653589793, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
         { name: "armor-shoulder-2x.stl", parent: skeleton.leftUpperArm, position: [0, 0, 5], rotation: [0, 3.141592653589793, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
         { name: "armor-shoulder-2x.stl", parent: skeleton.rightUpperArm, position: [0, 0, -5], rotation: [3.141592653589793, -3.141592653589793, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
         { name: "armor-upper-arm-2x.stl", parent: skeleton.leftUpperArm, position: [-8, 0, -3], rotation: [0, 1.5707963267948966, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
-        { name: "armor-forearm-2x.stl", parent: skeleton.rightLowerArm, position: [-4, 14, -3], rotation: [1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-forearm-2x.stl", parent: skeleton.leftLowerArm, position: [-4, 14, -3], rotation: [1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-forearm-2x.stl", parent: skeleton.rightLowerArm, position: [4, 14, 3], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-forearm-2x.stl", parent: skeleton.leftLowerArm, position: [4, 14, 3], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-upper-arm-2x.stl", parent: skeleton.rightUpperArm, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
-        { name: "hand-open-left.stl", parent: skeleton.rightLowerArm, position: [0, 18, 0], rotation: [-1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
-        { name: "hand-open-right.stl", parent: skeleton.leftLowerArm, position: [0, 18, 0], rotation: [-1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "hand-open-right.stl", parent: skeleton.rightLowerArm, position: [0, 18, 0], rotation: [-1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "hand-open-left.stl", parent: skeleton.leftLowerArm, position: [0, 18, 0], rotation: [-1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-hip-2x.stl", parent: skeleton.leftUpperLeg, position: [0, 0, -7], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-hip-2x.stl", parent: skeleton.rightUpperLeg, position: [0, 0, 5], rotation: [0, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-thigh-2x.stl", parent: skeleton.leftUpperLeg, position: [-4, 0, -7], rotation: [0, 1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },
-        { name: "armor-thigh-2x.stl", parent: skeleton.rightUpperLeg, position: [-4, 0, -7], rotation: [0, 1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },        
-        { name: "armor-knee-2x.stl", parent: skeleton.leftKnee, position: [6, 8, -5], rotation: [1.5707963267948966, 0, 3.141592653589793], color: [0.5, 0.5, 0.5] },
-        { name: "armor-knee-2x.stl", parent: skeleton.rightKnee, position: [0, 8, -5], rotation: [1.5707963267948966, 0, 3.141592653589793], color: [0.5, 0.5, 0.5] },
-        { name: "armor-shin-2x.stl", parent: skeleton.leftKnee, position: [0, 0, -4], rotation: [1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-shin-2x.stl", parent: skeleton.rightKnee, position: [-6, 0, -4], rotation: [1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-foot-2x.stl", parent: skeleton.leftFoot, position: [-10, 0, -3], rotation: [0, 1.5707963267948966, 1.5707963267948966], color: [0.5, 0.5, 0.5] },
-        { name: "armor-foot-2x.stl", parent: skeleton.rightFoot, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-thigh-2x.stl", parent: skeleton.leftUpperLeg, position: [5, 0, 5], rotation: [0, -1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },
+        { name: "armor-thigh-2x.stl", parent: skeleton.rightUpperLeg, position: [4, 0, 5], rotation: [0, -1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },        
+        { name: "armor-knee-2x.stl", parent: skeleton.leftKnee, position: [0, 8, 5], rotation: [1.5707963267948966, 3.141592653589793, 3.141592653589793], color: [0.5, 0.5, 0.5] },
+        { name: "armor-knee-2x.stl", parent: skeleton.rightKnee, position: [-6, 8, 5], rotation: [1.5707963267948966, 3.141592653589793, 3.141592653589793], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shin-2x.stl", parent: skeleton.leftKnee, position: [6, 0, 4], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shin-2x.stl", parent: skeleton.rightKnee, position: [0, 0, 4], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-foot-2x.stl", parent: skeleton.leftFoot, position: [0, -9, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-foot-2x.stl", parent: skeleton.rightFoot, position: [0, -9, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
       ];
 
       modelConfigs.forEach(config => {
@@ -850,3 +850,4 @@
   </script>
 </body>
 </html>
+
