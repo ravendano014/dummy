@@ -392,56 +392,7 @@
         const thumbColor = new BABYLON.Color3(0.9, 0.7, 0.7);
         const fingerColor = new BABYLON.Color3(0.7, 0.7, 0.9);
 
-        // Wrist
-        hand.wrist = createJoint(`${side}Wrist`, 3, 
-          new BABYLON.Vector3(sign * 30, 20, 0), wristJoint, scene);
 
-        // Palm
-        hand.palm = createBone(`${side}Palm`, 6, 3, 
-          new BABYLON.Vector3(sign * 33, 20, 0), 
-          new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
-          hand.wrist, new BABYLON.Color3(0.8, 0.8, 0.8));
-
-        // Thumb
-        hand.thumb1 = createBone(`${side}Thumb1`, 3, 1, 
-          new BABYLON.Vector3(sign * 36, 20, sign * 1.5), 
-          new BABYLON.Vector3(0, sign * Math.PI/4, sign * Math.PI/4), 
-          hand.palm, thumbColor);
-        
-        hand.thumb2 = createBone(`${side}Thumb2`, 2.5, 0.8, 
-          new BABYLON.Vector3(sign * 38.5, 20, sign * 3), 
-          new BABYLON.Vector3(0, sign * Math.PI/4, sign * Math.PI/4), 
-          hand.thumb1, thumbColor);
-
-        // Fingers
-        const fingerPositions = [17.5, 20, 22.5, 25]; // Y positions for each finger
-        const fingerNames = ['Index', 'Middle', 'Ring', 'Pinky'];
-        
-        fingerNames.forEach((name, i) => {
-          // Metacarpal (palm bone)
-          hand[`${name}Meta`] = createBone(`${side}${name}Meta`, 3, 1, 
-            new BABYLON.Vector3(sign * 36, fingerPositions[i], 0), 
-            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
-            hand.palm, fingerColor);
-          
-          // Proximal phalanx
-          hand[`${name}Prox`] = createBone(`${side}${name}Prox`, 2.5, 0.8, 
-            new BABYLON.Vector3(sign * 38.5, fingerPositions[i], 0), 
-            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
-            hand[`${name}Meta`], fingerColor);
-          
-          // Intermediate phalanx
-          hand[`${name}Inter`] = createBone(`${side}${name}Inter`, 2, 0.6, 
-            new BABYLON.Vector3(sign * 40.5, fingerPositions[i], 0), 
-            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
-            hand[`${name}Prox`], fingerColor);
-          
-          // Distal phalanx
-          hand[`${name}Dist`] = createBone(`${side}${name}Dist`, 1.5, 0.5, 
-            new BABYLON.Vector3(sign * 42, fingerPositions[i], 0), 
-            new BABYLON.Vector3(0, 0, sign * Math.PI/2), 
-            hand[`${name}Inter`], fingerColor);
-        });
 
         return hand;
       };
@@ -479,7 +430,7 @@
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftElbow, scene);
       
       skeleton.leftWrist = createJoint("leftWrist", 3, 
-        new BABYLON.Vector3(-30, 20, 0), skeleton.leftLowerArm, scene);
+        new BABYLON.Vector3(1, 15, 0), skeleton.leftLowerArm, scene);
       
       // Right arm (mirror of left)
       skeleton.rightShoulder = createJoint("rightShoulder", 5, 
@@ -495,7 +446,7 @@
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightElbow, scene);
       
       skeleton.rightWrist = createJoint("rightWrist", 3, 
-        new BABYLON.Vector3(30, 20, 0), skeleton.rightLowerArm, scene);
+        new BABYLON.Vector3(-1, 15, 0), skeleton.rightLowerArm, scene);
       
       // Legs
       skeleton.leftHip = createJoint("leftHip", 5, 
@@ -508,13 +459,13 @@
         new BABYLON.Vector3(-3, -25, 0), skeleton.leftUpperLeg, scene);
       
       skeleton.leftLowerLeg = createBone("leftLowerLeg", 20, 3.5, 
-        new BABYLON.Vector3(-3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.leftKnee, scene);
+        new BABYLON.Vector3(3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.leftKnee, scene);
       
       skeleton.leftAnkle = createJoint("leftAnkle", 3, 
-        new BABYLON.Vector3(-3, -45, 0), skeleton.leftLowerLeg, scene);
+        new BABYLON.Vector3(0, 0, 0), skeleton.leftLowerLeg, scene);
       
       skeleton.leftFoot = createBone("leftFoot", 10, 2.5, 
-        new BABYLON.Vector3(9, 15, 5), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.leftAnkle, scene);
+        new BABYLON.Vector3(0, -30, 3), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.leftAnkle, scene);
       
       // Right leg (mirror of left)
       skeleton.rightHip = createJoint("rightHip", 5, 
@@ -527,13 +478,13 @@
         new BABYLON.Vector3(3, -25, 0), skeleton.rightUpperLeg, scene);
       
       skeleton.rightLowerLeg = createBone("rightLowerLeg", 20, 3.5, 
-        new BABYLON.Vector3(3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.rightKnee, scene);
+        new BABYLON.Vector3(-3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.rightKnee, scene);
       
       skeleton.rightAnkle = createJoint("rightAnkle", 3, 
-        new BABYLON.Vector3(3, -45, 0), skeleton.rightLowerLeg, scene);
+        new BABYLON.Vector3(0, 0, 0), skeleton.rightLowerLeg, scene);
       
       skeleton.rightFoot = createBone("rightFoot", 10, 2.5, 
-        new BABYLON.Vector3(-10, 15, 5), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.rightAnkle, scene);
+        new BABYLON.Vector3(0, -30, 3), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.rightAnkle, scene);
       
       // Create hands with fingers
       skeleton.leftHand = createHand('left', skeleton.leftWrist, scene);
@@ -581,18 +532,18 @@
         { name: "armor-forearm-2x.stl", parent: skeleton.rightLowerArm, position: [4, 14, 3], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-forearm-2x.stl", parent: skeleton.leftLowerArm, position: [4, 14, 3], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-upper-arm-2x.stl", parent: skeleton.rightUpperArm, position: [10, 0, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
-        { name: "hand-open-right.stl", parent: skeleton.rightLowerArm, position: [0, 18, 0], rotation: [-1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
-        { name: "hand-open-left.stl", parent: skeleton.leftLowerArm, position: [0, 18, 0], rotation: [-1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "hand-open-right.stl", parent: skeleton.rightWrist, position: [0, 0, 0], rotation: [-1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
+        { name: "hand-open-left.stl", parent: skeleton.leftWrist, position: [0, 0, 0], rotation: [-1.5707963267948966, 0, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-hip-2x.stl", parent: skeleton.leftUpperLeg, position: [0, 0, -7], rotation: [0, 0, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-hip-2x.stl", parent: skeleton.rightUpperLeg, position: [0, 0, 5], rotation: [0, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
         { name: "armor-thigh-2x.stl", parent: skeleton.leftUpperLeg, position: [5, 0, 5], rotation: [0, -1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },
         { name: "armor-thigh-2x.stl", parent: skeleton.rightUpperLeg, position: [4, 0, 5], rotation: [0, -1.5707963267948966, 3.141592653589793], color: [0.5, 0.5, 0.5] },        
         { name: "armor-knee-2x.stl", parent: skeleton.leftKnee, position: [0, 8, 5], rotation: [1.5707963267948966, 3.141592653589793, 3.141592653589793], color: [0.5, 0.5, 0.5] },
         { name: "armor-knee-2x.stl", parent: skeleton.rightKnee, position: [-6, 8, 5], rotation: [1.5707963267948966, 3.141592653589793, 3.141592653589793], color: [0.5, 0.5, 0.5] },
-        { name: "armor-shin-2x.stl", parent: skeleton.leftKnee, position: [6, 0, 4], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-shin-2x.stl", parent: skeleton.rightKnee, position: [0, 0, 4], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
-        { name: "armor-foot-2x.stl", parent: skeleton.leftFoot, position: [0, -9, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
-        { name: "armor-foot-2x.stl", parent: skeleton.rightFoot, position: [0, -9, 3], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shin-2x.stl", parent: skeleton.leftAnkle, position: [3, 0, 4], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-shin-2x.stl", parent: skeleton.rightAnkle, position: [3, 0, 4], rotation: [1.5707963267948966, 3.141592653589793, 0], color: [0.5, 0.5, 0.5] },
+        { name: "armor-foot-2x.stl", parent: skeleton.leftFoot, position: [0, -6, 4], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
+        { name: "armor-foot-2x.stl", parent: skeleton.rightFoot, position: [0, -6, 4], rotation: [3.141592653589793, 1.5707963267948966, -1.5707963267948966], color: [0.5, 0.5, 0.5] },
       ];
 
       modelConfigs.forEach(config => {
@@ -850,4 +801,3 @@
   </script>
 </body>
 </html>
-
