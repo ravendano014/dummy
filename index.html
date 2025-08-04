@@ -1085,7 +1085,7 @@ const POSE_PRESETS = {
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftElbow, scene);
       
       skeleton.leftWrist = createJoint("leftWrist", 3, 
-        new BABYLON.Vector3(-1, 15, 0), skeleton.leftLowerArm, scene);
+        new BABYLON.Vector3(2, 15, 0), skeleton.leftLowerArm, scene);
       
       // Right arm (mirror of left)
       skeleton.rightShoulder = createJoint("rightShoulder", 5, 
@@ -1201,7 +1201,7 @@ const POSE_PRESETS = {
         { name: "armor-upper-arm-2x.stl", parent: skeletonBones.leftUpperArm, position: [-16, 0, -3], rotation: [0, Math.PI/2, Math.PI/2], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperArm, clonePosition: [16, 0, 3], cloneRotation: [Math.PI, Math.PI/2, -Math.PI/2] },
         { name: "armor-forearm-2x.stl", parent: skeletonBones.rightLowerArm, position: [4, 20, 3], rotation: [Math.PI/2, Math.PI, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.leftLowerArm, clonePosition: [4, 20, 3], cloneRotation: [Math.PI/2, Math.PI, 0] },
         { name: "hand-open-right.stl", parent: skeletonBones.rightWrist, position: [0, 8, 0], rotation: [-Math.PI/2, -Math.PI/2, 0], color: CONFIG.armorHandsColor.asArray()}, 
-        { name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [2, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.armorHandsColor.asArray()},
+        { name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [-1, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.armorHandsColor.asArray()},
         { name: "armor-hip-2x.stl", parent: skeletonBones.leftUpperLeg, position: [0, 0, -6], rotation: [0, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [0, 0, 5], cloneRotation: [0, Math.PI, 0] },
         { name: "armor-thigh-2x.stl", parent: skeletonBones.leftUpperLeg, position: [4, 0, 5], rotation: [0, -Math.PI/2, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [5, 0, 5], cloneRotation: [0, -Math.PI/2, Math.PI] },        
         { name: "armor-knee-2x.stl", parent: skeletonBones.leftKnee, position: [0, 5, 3], rotation: [Math.PI/2, Math.PI, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightKnee, clonePosition: [-5, 5, 3], cloneRotation: [Math.PI/2, Math.PI, Math.PI] },
@@ -1861,3 +1861,4 @@ const POSE_PRESETS = {
   </script>
 </body>
 </html>
+
