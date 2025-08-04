@@ -241,11 +241,31 @@
         </div>
       </div>
 
-      <!-- Nuevo control para apertura combinada de piernas -->
       <div class="control-group">
-        <h3><i class="fas fa-arrows-alt-h"></i> Legs Spread</h3>
+        <h3><i class="fas fa-undo-alt"></i> Pelvis Controls</h3>
         <div class="slider-container">
-          <input type="range" min="0" max="1" step="0.01" value="0" class="slider" id="legsSpreadSlider">
+          <div class="slider-label">
+            <span>Front/Back Tilt</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="pelvisTiltSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Side Tilt</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="pelvisSideTiltSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Rotation</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="pelvisRotationSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Legs Spread</span>
+          </div>
+          <input type="range" min="-1.5" max="0.5" step="0.01" value="0" class="slider" id="legsSpreadSlider">
         </div>
       </div>
     </div>
@@ -325,7 +345,7 @@
           <div class="slider-label">
             <span>Foot Tilt</span>
           </div>
-          <input type="range" min="0.7" max="2.5" step="0.01" value="0" class="slider" id="leftFootTiltSlider">
+          <input type="range" min="0.2" max="2.5" step="0.01" value="0" class="slider" id="leftFootTiltSlider">
         </div>
       </div>
 
@@ -353,7 +373,7 @@
           <div class="slider-label">
             <span>Foot Tilt</span>
           </div>
-          <input type="range" min="0.7" max="2.5" step="0.01" value="0" class="slider" id="rightFootTiltSlider">
+          <input type="range" min="0.2" max="2.5" step="0.01" value="0" class="slider" id="rightFootTiltSlider">
         </div>
       </div>
     </div>
@@ -790,6 +810,33 @@
         updateStatus("Head tilted");
       });
 
+      // Nuevos controles para la pelvis
+      document.getElementById("pelvisTiltSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.pelvis.rotation.x = value;
+        // Compensación automática de la columna
+        skeleton.spineLower.rotation.x = -value * 0.3;
+        skeleton.spineMiddle.rotation.x = -value * 0.2;
+        updateStatus("Pelvis tilted forward/back");
+      });
+
+      document.getElementById("pelvisSideTiltSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.pelvis.rotation.z = value;
+        // Compensación automática de la columna
+        skeleton.spineLower.rotation.z = -value * 0.3;
+        skeleton.spineMiddle.rotation.z = -value * 0.2;
+        updateStatus("Pelvis side tilt");
+      });
+
+      document.getElementById("pelvisRotationSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.pelvis.rotation.y = value;
+        // Compensación de columna
+        skeleton.spineLower.rotation.y = -value * 0.4;
+        updateStatus("Pelvis rotated");
+      });
+
       // Left arm controls
       document.getElementById("leftShoulderSlider").addEventListener('input', (e) => {
         const value = parseFloat(e.target.value);
@@ -1055,3 +1102,4 @@
   </script>
 </body>
 </html>
+
