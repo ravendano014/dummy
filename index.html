@@ -408,17 +408,17 @@
       const skeletonRoot = new BABYLON.TransformNode("skeletonRoot", scene);
 
       // Root/pelvis - the center of the skeleton
-      skeleton.pelvis = createJoint("pelvis", 10, new BABYLON.Vector3(0, 0, 0), skeletonRoot, scene);
+      skeleton.pelvis = createJoint("pelvis", 5, new BABYLON.Vector3(0, 0, 0), skeletonRoot, scene);
       
       // Spine
       skeleton.spineLower = createBone("spineLower", 15, 5, 
-        new BABYLON.Vector3(0, 7.5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.pelvis, scene);
+        new BABYLON.Vector3(0, 8, 2), new BABYLON.Vector3(0, 0, 0), skeleton.pelvis, scene);
       
-      skeleton.spineMiddle = createBone("spineMiddle", 15, 4, 
+      skeleton.spineMiddle = createBone("spineMiddle", 5, 4, 
         new BABYLON.Vector3(0, 15, 0), new BABYLON.Vector3(0, 0, 0), skeleton.spineLower, scene);
       
-      skeleton.spineUpper = createBone("spineUpper", 15, 3, 
-        new BABYLON.Vector3(0, 22.5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.spineMiddle, scene);
+      skeleton.spineUpper = createBone("spineUpper", 5, 3, 
+        new BABYLON.Vector3(0, 22.5, 1), new BABYLON.Vector3(0, 0, 0), skeleton.spineMiddle, scene);
       
       skeleton.neck = createBone("neck", 5, 3, 
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.spineUpper, scene);
@@ -460,7 +460,7 @@
       
       // Legs
       skeleton.leftHip = createJoint("leftHip", 5, 
-        new BABYLON.Vector3(-3, -5, 0), skeleton.pelvis, scene);
+        new BABYLON.Vector3(-3, -5, 4), skeleton.pelvis, scene);
       
       skeleton.leftUpperLeg = createBone("leftUpperLeg", 20, 4, 
         new BABYLON.Vector3(-3, -5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.leftHip, scene);
@@ -479,7 +479,7 @@
       
       // Right leg (mirror of left)
       skeleton.rightHip = createJoint("rightHip", 5, 
-        new BABYLON.Vector3(3, -5, 0), skeleton.pelvis, scene);
+        new BABYLON.Vector3(3, -5, 4), skeleton.pelvis, scene);
       
       skeleton.rightUpperLeg = createBone("rightUpperLeg", 10, 4, 
         new BABYLON.Vector3(3, -5, 0), new BABYLON.Vector3(0, 0, 0), skeleton.rightHip, scene);
