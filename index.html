@@ -84,6 +84,13 @@
       overflow-y: auto;
     }
     
+    .control-panel.right-bottom {
+      right: 350px;
+      bottom: 20px;
+      width: 280px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
     
     .panel-header {
       display: flex;
@@ -347,7 +354,7 @@
       transform: translateY(-2px);
     }
 
-        .reset-button-container {
+    .reset-button-container {
       margin-top: 20px;
       padding-top: 15px;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -854,6 +861,28 @@
     </div>
   </div>
 
+    <div class="control-panel right-bottom" id="colorControls">
+    <div class="panel-header">
+      <h2><i class="fas fa-palette"></i> Color Controls</h2>
+      <i class="fas fa-chevron-up collapse-icon"></i>
+    </div>
+    <div class="panel-content collapsed">
+      <div class="control-group">
+        <h3><i class="fas fa-tshirt"></i> Armor Color</h3>
+        <div class="button-group" style="grid-template-columns: repeat(3, 1fr);">
+          <button class="button" onclick="changeArmorColor('#FFD700')" style="background: #FFD700;">Yellow</button>
+          <button class="button" onclick="changeArmorColor('#FFA500')" style="background: #FFA500;">Orange</button>
+          <button class="button" onclick="changeArmorColor('#FF0000')" style="background: #FF0000;">Red</button>
+          <button class="button" onclick="changeArmorColor('#0000FF')" style="background: #0000FF;">Blue</button>
+          <button class="button" onclick="changeArmorColor('#800080')" style="background: #800080;">Violet</button>
+          <button class="button" onclick="changeArmorColor('#00FF00')" style="background: #00FF00;">Green</button>
+          <button class="button" onclick="changeArmorColor('#FFFFFF')" style="background: #FFFFFF; color: #333;">White</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <div class="status-label" id="statusLabel">
     <i class="fas fa-circle-notch fa-spin"></i>
     <span>Initializing system...</span>
@@ -878,6 +907,42 @@
     let statusTimeout;
     let skeleton;
 
+// Function to change armor color
+const applyArmorColorToMesh = (mesh, color) => {
+      if (!mesh) return;
+      // Create new material so we don't run into frozen material issues
+      const mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
+      mat.diffuseColor = color;
+      mat.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+      mat.freeze();
+      mesh.material = mat;
+    };
+
+const changeArmorColor = (hexColor) => {
+      CONFIG.armorColor = BABYLON.Color3.FromHexString(hexColor);
+
+      const armorMeshes = [
+        "armor-head.stl", "armor-neck.stl", "armor-abdomen.stl", 
+        "armor-outer-chest.stl", "armor-waist.stl", "armor-crotch.stl",
+        "armor-shoulder-2x.stl", "armor-upper-arm-2x.stl", "armor-forearm-2x.stl",
+        "armor-hip-2x.stl", "armor-thigh-2x.stl", "armor-knee-2x.stl",
+        "armor-shin-2x.stl", "armor-foot-2x.stl", "armor-toe-2x.stl"
+      ];
+
+      armorMeshes.forEach(modelName => {
+        const mesh = scene.getMeshByName(modelName);
+        if (mesh) {
+          applyArmorColorToMesh(mesh, CONFIG.armorColor);
+        }
+        const clonedMesh = scene.getMeshByName(modelName + "_clone");
+        if (clonedMesh) {
+          applyArmorColorToMesh(clonedMesh, CONFIG.armorColor);
+        }
+      });
+
+      updateStatus(`Armor color changed to ${hexColor}`);
+    };
+        
     // Pose presets
 const POSE_PRESETS = {
       default: {
@@ -1861,4 +1926,5 @@ const POSE_PRESETS = {
   </script>
 </body>
 </html>
+
 
