@@ -475,7 +475,7 @@
         new BABYLON.Vector3(0, 0, 0), skeleton.leftLowerLeg, scene);
       
       skeleton.leftFoot = createBone("leftFoot", 10, 2.5, 
-        new BABYLON.Vector3(0, -30, 3), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.leftAnkle, scene);
+        new BABYLON.Vector3(0, -30, 1), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.leftAnkle, scene);
       
       // Right leg (mirror of left)
       skeleton.rightHip = createJoint("rightHip", 5, 
@@ -487,14 +487,14 @@
       skeleton.rightKnee = createJoint("rightKnee", 4, 
         new BABYLON.Vector3(3, -25, 0), skeleton.rightUpperLeg, scene);
       
-      skeleton.rightLowerLeg = createBone("rightLowerLeg", 20, 3.5, 
+      skeleton.rightLowerLeg = createBone("rightLowerLeg", 10, 3.5, 
         new BABYLON.Vector3(-3, 0, 0), new BABYLON.Vector3(0, 0, 0), skeleton.rightKnee, scene);
       
       skeleton.rightAnkle = createJoint("rightAnkle", 3, 
         new BABYLON.Vector3(0, 0, 0), skeleton.rightLowerLeg, scene);
       
       skeleton.rightFoot = createBone("rightFoot", 10, 2.5, 
-        new BABYLON.Vector3(0, -30, 3), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.rightAnkle, scene);
+        new BABYLON.Vector3(0, -30, 1), new BABYLON.Vector3(Math.PI/2, 0, 0), skeleton.rightAnkle, scene);
       
       // Create hands with fingers
       skeleton.leftHand = createHand('left', skeleton.leftWrist, scene);
@@ -556,10 +556,10 @@
         { name: "armor-forearm-2x.stl", parent: skeletonBones.rightLowerArm, position: [4, 20, 3], rotation: [Math.PI/2, Math.PI, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.leftLowerArm, clonePosition: [4, 20, 3], cloneRotation: [Math.PI/2, Math.PI, 0] },
         { name: "hand-open-right.stl", parent: skeletonBones.rightWrist, position: [0, 8, 0], rotation: [-Math.PI/2, -Math.PI/2, 0], color: CONFIG.armorColor.asArray()}, 
         { name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [2, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.armorColor.asArray()},
-        { name: "armor-hip-2x.stl", parent: skeletonBones.leftUpperLeg, position: [0, 0, -7], rotation: [0, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [0, 0, 5], cloneRotation: [0, Math.PI, 0] },
-        { name: "armor-thigh-2x.stl", parent: skeletonBones.leftUpperLeg, position: [5, 0, 5], rotation: [0, -Math.PI/2, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [4, 0, 5], cloneRotation: [0, -Math.PI/2, Math.PI] },        
-        { name: "armor-knee-2x.stl", parent: skeletonBones.leftKnee, position: [0, 8, 3], rotation: [Math.PI/2, Math.PI, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightKnee, clonePosition: [-6, 8, 3], cloneRotation: [Math.PI/2, Math.PI, Math.PI] },
-        { name: "armor-shin-2x.stl", parent: skeletonBones.leftAnkle, position: [3, 0, 4], rotation: [Math.PI/2, Math.PI, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightAnkle, clonePosition: [3, 0, 4], cloneRotation: [Math.PI/2, Math.PI, 0] },
+        { name: "armor-hip-2x.stl", parent: skeletonBones.leftUpperLeg, position: [0, 0, -6], rotation: [0, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [0, 0, 5], cloneRotation: [0, Math.PI, 0] },
+        { name: "armor-thigh-2x.stl", parent: skeletonBones.leftUpperLeg, position: [4, 0, 5], rotation: [0, -Math.PI/2, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [5, 0, 5], cloneRotation: [0, -Math.PI/2, Math.PI] },        
+        { name: "armor-knee-2x.stl", parent: skeletonBones.leftKnee, position: [0, 5, 3], rotation: [Math.PI/2, Math.PI, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightKnee, clonePosition: [-5, 5, 3], cloneRotation: [Math.PI/2, Math.PI, Math.PI] },
+        { name: "armor-shin-2x.stl", parent: skeletonBones.leftAnkle, position: [-4, -25, 4], rotation: [-Math.PI/2, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightAnkle, clonePosition: [-3, -25, 4], cloneRotation: [-Math.PI/2, 0, 0] },
         { name: "armor-foot-2x.stl", parent: skeletonBones.leftFoot, position: [0, -6, 4], rotation: [Math.PI, Math.PI/2, -Math.PI/2], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightFoot, clonePosition: [0, -6, 4], cloneRotation: [Math.PI, Math.PI/2, -Math.PI/2] },
         { name: "armor-toe-2x.stl", parent: skeletonBones.leftFoot, position: [0, 7, 0], rotation: [Math.PI/2, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightFoot, clonePosition: [0, 7, 0], cloneRotation: [Math.PI/2, 0, 0] },
       ];
@@ -923,6 +923,3 @@
   </script>
 </body>
 </html>
-
-
-
