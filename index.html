@@ -1158,10 +1158,10 @@ const POSE_PRESETS = {
       
       // Shoulders and arms
       skeleton.leftShoulder = createJoint("leftShoulder", 5, 
-        new BABYLON.Vector3(-5, -27.5, 0), skeleton.spineUpper, scene);
+        new BABYLON.Vector3(-5, -8, 0), skeleton.spineUpper, scene);
       
       skeleton.leftUpperArm = createBone("leftUpperArm", 15, 3, 
-        new BABYLON.Vector3(-7.5, 20, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftShoulder, scene);
+        new BABYLON.Vector3(-7.5, 0, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftShoulder, scene);
       
       skeleton.leftElbow = createJoint("leftElbow", 4, 
         new BABYLON.Vector3(-15, 4, 0), skeleton.leftUpperArm, scene);
@@ -1174,10 +1174,10 @@ const POSE_PRESETS = {
       
       // Right arm (mirror of left)
       skeleton.rightShoulder = createJoint("rightShoulder", 5, 
-        new BABYLON.Vector3(5, -27.5, 0), skeleton.spineUpper, scene);
+        new BABYLON.Vector3(5, -8, 0), skeleton.spineUpper, scene);
       
       skeleton.rightUpperArm = createBone("rightUpperArm", 15, 3, 
-        new BABYLON.Vector3(7.5, 20, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightShoulder, scene);
+        new BABYLON.Vector3(7.5, 0, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightShoulder, scene);
       
       skeleton.rightElbow = createJoint("rightElbow", 4, 
         new BABYLON.Vector3(15, 4, 0), skeleton.rightUpperArm, scene);
@@ -1958,5 +1958,3 @@ const POSE_PRESETS = {
   </script>
 </body>
 </html>
-
-
