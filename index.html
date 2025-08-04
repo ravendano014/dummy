@@ -233,6 +233,13 @@
           <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="spineTwistSlider">
         </div>
       </div>
+
+      <div class="control-group">
+        <h3><i class="fas fa-arrows-alt-h"></i> Head Tilt</h3>
+        <div class="slider-container">
+          <input type="range" min="-1" max="1" step="0.01" value="0" class="slider" id="headTiltSlider">
+        </div>
+      </div>
     </div>
   </div>
   
@@ -246,7 +253,13 @@
         <h3><i class="fas fa-hand-paper"></i> Left Arm</h3>
         <div class="slider-container">
           <div class="slider-label">
-            <span>Shoulder</span>
+            <span>Shoulder Front/Back</span>
+          </div>
+          <input type="range" min="-3" max="0.5" step="0.01" value="0" class="slider" id="leftShoulderFrontSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Shoulder Up/Down</span>
           </div>
           <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="leftShoulderSlider">
         </div>
@@ -262,7 +275,13 @@
         <h3><i class="fas fa-hand-paper"></i> Right Arm</h3>
         <div class="slider-container">
           <div class="slider-label">
-            <span>Shoulder</span>
+            <span>Shoulder Front/Back</span>
+          </div>
+          <input type="range" min="-3" max="0.5" step="0.01" value="0" class="slider" id="rightShoulderFrontSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Shoulder Up/Down</span>
           </div>
           <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="rightShoulderSlider">
         </div>
@@ -270,7 +289,7 @@
           <div class="slider-label">
             <span>Elbow</span>
           </div>
-          <input type="range" min="0" max="2.5" step="0.01" value="0" class="slider" id="rightElbowSlider">
+          <input type="range" min="-2.5" max="0" step="0.01" value="0" class="slider" id="rightElbowSlider">
         </div>
       </div>
 
@@ -280,13 +299,19 @@
           <div class="slider-label">
             <span>Hip</span>
           </div>
-          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="leftHipSlider">
+          <input type="range" min="-2" max="1.5" step="0.01" value="0" class="slider" id="leftHipSlider">
         </div>
         <div class="slider-container">
           <div class="slider-label">
             <span>Knee</span>
           </div>
-          <input type="range" min="0" max="2.0" step="0.01" value="0" class="slider" id="leftKneeSlider">
+          <input type="range" min="-0.2" max="3" step="0.01" value="0" class="slider" id="leftKneeSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Foot Tilt</span>
+          </div>
+          <input type="range" min="0.2" max="2.5" step="0.01" value="0" class="slider" id="leftFootTiltSlider">
         </div>
       </div>
 
@@ -296,13 +321,19 @@
           <div class="slider-label">
             <span>Hip</span>
           </div>
-          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="rightHipSlider">
+          <input type="range" min="-2" max="1.5" step="0.01" value="0" class="slider" id="rightHipSlider">
         </div>
         <div class="slider-container">
           <div class="slider-label">
             <span>Knee</span>
           </div>
-          <input type="range" min="0" max="2.0" step="0.01" value="0" class="slider" id="rightKneeSlider">
+          <input type="range" min="-0.2" max="3.0" step="0.01" value="0" class="slider" id="rightKneeSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Foot Tilt</span>
+          </div>
+          <input type="range" min="0.2" max="2.5" step="0.01" value="0" class="slider" id="rightFootTiltSlider">
         </div>
       </div>
     </div>
@@ -318,9 +349,15 @@
         <h3><i class="fas fa-hand-point-left"></i> Left Hand</h3>
         <div class="slider-container">
           <div class="slider-label">
-            <span>Wrist</span>
+            <span>Wrist Rotation</span>
           </div>
           <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="leftWristSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Wrist In/Out</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="leftWristInSlider">
         </div>
         <div class="slider-container">
           <div class="slider-label">
@@ -334,9 +371,15 @@
         <h3><i class="fas fa-hand-point-right"></i> Right Hand</h3>
         <div class="slider-container">
           <div class="slider-label">
-            <span>Wrist</span>
+            <span>Wrist Rotation</span>
           </div>
           <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="rightWristSlider">
+        </div>
+        <div class="slider-container">
+          <div class="slider-label">
+            <span>Wrist In/Out</span>
+          </div>
+          <input type="range" min="-0.5" max="0.5" step="0.01" value="0" class="slider" id="rightWristInSlider">
         </div>
         <div class="slider-container">
           <div class="slider-label">
@@ -720,11 +763,24 @@
         updateStatus("Spine twisted");
       });
       
+      // Head tilt control
+      document.getElementById("headTiltSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.neck.rotation.x = value;
+        updateStatus("Head tilted");
+      });
+
       // Left arm controls
       document.getElementById("leftShoulderSlider").addEventListener('input', (e) => {
         const value = parseFloat(e.target.value);
         skeleton.leftUpperArm.rotation.z = Math.PI/2 + value;
         updateStatus("Left shoulder adjusted");
+      });
+
+      document.getElementById("leftShoulderFrontSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftUpperArm.rotation.x = value;
+        updateStatus("Left shoulder moved forward/back");
       });
 
       document.getElementById("leftElbowSlider").addEventListener('input', (e) => {
@@ -738,6 +794,12 @@
         const value = parseFloat(e.target.value);
         skeleton.rightUpperArm.rotation.z = -Math.PI/2 + value;
         updateStatus("Right shoulder adjusted");
+      });
+
+      document.getElementById("rightShoulderFrontSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightUpperArm.rotation.x = value;
+        updateStatus("Right shoulder moved forward/back");
       });
 
       document.getElementById("rightElbowSlider").addEventListener('input', (e) => {
@@ -758,6 +820,12 @@
         skeleton.leftLowerLeg.rotation.x = value;
         updateStatus("Left knee adjusted");
       });
+
+      document.getElementById("leftFootTiltSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftFoot.rotation.x = value;
+        updateStatus("Left foot tilted");
+      });
       
       // Right leg controls
       document.getElementById("rightHipSlider").addEventListener('input', (e) => {
@@ -770,6 +838,12 @@
         const value = parseFloat(e.target.value);
         skeleton.rightLowerLeg.rotation.x = value;
         updateStatus("Right knee adjusted");
+      });
+
+      document.getElementById("rightFootTiltSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightFoot.rotation.x = value;
+        updateStatus("Right foot tilted");
       });
 
       // Hand controls
@@ -786,6 +860,22 @@
         if (skeleton.rightHand.wrist) {
             skeleton.rightHand.wrist.rotation.z = -value;
             updateStatus("Right wrist rotated");
+        }
+      });
+
+      document.getElementById("leftWristInSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        if (skeleton.leftHand.wrist) {
+            skeleton.leftHand.wrist.rotation.x = value;
+            updateStatus("Left wrist moved in/out");
+        }
+      });
+
+      document.getElementById("rightWristInSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        if (skeleton.rightHand.wrist) {
+            skeleton.rightHand.wrist.rotation.x = -value;
+            updateStatus("Right wrist moved in/out");
         }
       });
 
