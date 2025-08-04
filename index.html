@@ -590,18 +590,16 @@
         <h3><i class="fas fa-hand-paper"></i> Left Arm</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Move shoulder forward/back">
-            <span>Shoulder Front/Back</span>
+            <span>Shoulder Front/Back | Up/Down | Side</span>
             <span class="slider-value" data-target="leftShoulderFrontSlider">0.00</span>
+            <span class="slider-value" data-target="leftShoulderSlider">0.00</span>
+            <span class="slider-value" data-target="leftShoulderSideSlider">0.00</span>
           </div>
           <input type="range" min="-3" max="0.5" step="0.01" value="0" class="slider" id="leftShoulderFrontSlider">
-        </div>
-        <div class="slider-container">
-          <div class="slider-label" data-tooltip="Raise/lower shoulder">
-            <span>Shoulder Up/Down</span>
-            <span class="slider-value" data-target="leftShoulderSlider">0.00</span>
-          </div>
           <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="leftShoulderSlider">
+          <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="leftShoulderSideSlider">
         </div>
+
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Bend elbow">
             <span>Elbow</span>
@@ -612,17 +610,14 @@
         <h3><i class="fas fa-hand-paper"></i> Right Arm</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Move shoulder forward/back">
-            <span>Shoulder Front/Back</span>
+            <span>Shoulder Front/Back | Up/Down | Side</span>
             <span class="slider-value" data-target="rightShoulderFrontSlider">0.00</span>
+            <span class="slider-value" data-target="rightShoulderSlider">0.00</span>
+            <span class="slider-value" data-target="rightShoulderSideSlider">0.00</span>
           </div>
           <input type="range" min="-3" max="0.5" step="0.01" value="0" class="slider" id="rightShoulderFrontSlider">
-        </div>
-        <div class="slider-container">
-          <div class="slider-label" data-tooltip="Raise/lower shoulder">
-            <span>Shoulder Up/Down</span>
-            <span class="slider-value" data-target="rightShoulderSlider">0.00</span>
-          </div>
           <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="rightShoulderSlider">
+        <input type="range" min="-1.5" max="1.5" step="0.01" value="0" class="slider" id="rightShoulderSideSlider">
         </div>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Bend elbow">
@@ -870,12 +865,12 @@
       <div class="control-group">
         <h3><i class="fas fa-tshirt"></i> Armor Color</h3>
         <div class="button-group" style="grid-template-columns: repeat(3, 1fr);">
-          <button class="button" onclick="changeArmorColor('#FFD700')" style="background: #FFD700;">Yellow</button>
-          <button class="button" onclick="changeArmorColor('#FFA500')" style="background: #FFA500;">Orange</button>
-          <button class="button" onclick="changeArmorColor('#FF0000')" style="background: #FF0000;">Red</button>
-          <button class="button" onclick="changeArmorColor('#0000FF')" style="background: #0000FF;">Blue</button>
-          <button class="button" onclick="changeArmorColor('#800080')" style="background: #800080;">Violet</button>
-          <button class="button" onclick="changeArmorColor('#00FF00')" style="background: #00FF00;">Green</button>
+          <button class="button" onclick="changeArmorColor('#d0c829')" style="background: #d0c829;">Yellow</button>
+          <button class="button" onclick="changeArmorColor('#f0601f')" style="background: #f0601f;">Orange</button>
+          <button class="button" onclick="changeArmorColor('#b51e18')" style="background: #b51e18;">Red</button>
+          <button class="button" onclick="changeArmorColor('#213195')" style="background: #213195;">Blue</button>
+          <button class="button" onclick="changeArmorColor('#6864c3')" style="background: #6864c3;">Violet</button>
+          <button class="button" onclick="changeArmorColor('#199749')" style="background: #199749;">Green</button>
           <button class="button" onclick="changeArmorColor('#FFFFFF')" style="background: #FFFFFF; color: #333;">White</button>
         </div>
       </div>
@@ -907,41 +902,66 @@
     let statusTimeout;
     let skeleton;
 
-// Function to change armor color
-const applyArmorColorToMesh = (mesh, color) => {
+  // Function to change armor color
+  const applyArmorColorToMesh = (mesh, color) => {
       if (!mesh) return;
-      // Create new material so we don't run into frozen material issues
-      const mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
+      
+      // Si la malla ya tiene un material, lo reutilizamos en lugar de crear uno nuevo
+      let mat = mesh.material;
+      
+      if (!mat || mat.isFrozen) {
+          // Si no hay material o está congelado, creamos uno nuevo
+          mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
+          mesh.material = mat;
+      }
+      
       mat.diffuseColor = color;
       mat.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-      mat.freeze();
-      mesh.material = mat;
-    };
+      
+      // No congelamos el material para permitir futuras modificaciones
+      // mat.freeze();
+  };
 
-const changeArmorColor = (hexColor) => {
+  const changeArmorColor = (hexColor) => {
       CONFIG.armorColor = BABYLON.Color3.FromHexString(hexColor);
-
+      
+      // Lista de todas las piezas de armadura que deben cambiar de color
       const armorMeshes = [
-        "armor-head.stl", "armor-neck.stl", "armor-abdomen.stl", 
-        "armor-outer-chest.stl", "armor-waist.stl", "armor-crotch.stl",
-        "armor-shoulder-2x.stl", "armor-upper-arm-2x.stl", "armor-forearm-2x.stl",
-        "armor-hip-2x.stl", "armor-thigh-2x.stl", "armor-knee-2x.stl",
-        "armor-shin-2x.stl", "armor-foot-2x.stl", "armor-toe-2x.stl"
+          "armor-head.stl", "armor-neck.stl", "armor-abdomen.stl", 
+          "armor-outer-chest.stl", "armor-waist.stl", "armor-crotch.stl",
+          "armor-shoulder-2x.stl", "armor-upper-arm-2x.stl", "armor-forearm-2x.stl",
+          "armor-hip-2x.stl", "armor-thigh-2x.stl", "armor-knee-2x.stl",
+          "armor-shin-2x.stl", "armor-foot-2x.stl", "armor-toe-2x.stl",
+          // Agregar cualquier otra pieza de armadura que pueda faltar
+          "hand-open-right.stl", "hand-open-left.stl" // Si también quieres que cambien las manos
       ];
 
       armorMeshes.forEach(modelName => {
-        const mesh = scene.getMeshByName(modelName);
-        if (mesh) {
-          applyArmorColorToMesh(mesh, CONFIG.armorColor);
-        }
-        const clonedMesh = scene.getMeshByName(modelName + "_clone");
-        if (clonedMesh) {
-          applyArmorColorToMesh(clonedMesh, CONFIG.armorColor);
-        }
+          // Aplicar a la malla principal
+          const mesh = scene.getMeshByName(modelName);
+        
+          if (mesh) {
+              applyArmorColorToMesh(mesh, CONFIG.armorColor);
+          }
+          
+          // Aplicar a clones (si existen)
+          const clonedMesh = scene.getMeshByName(modelName + "_clone");
+          if (clonedMesh) {
+              applyArmorColorToMesh(clonedMesh, CONFIG.armorColor);
+          }
+          
+          // Aplicar a cualquier otra variación que pueda existir
+          // Por ejemplo, si hay versiones con sufijos diferentes
+          const variations = scene.meshes.filter(m => m.name.startsWith(modelName.replace('.stl', '')));
+          variations.forEach(variation => {
+              if (variation !== mesh && variation !== clonedMesh) {
+                  applyArmorColorToMesh(variation, CONFIG.armorColor);
+              }
+          });
       });
 
       updateStatus(`Armor color changed to ${hexColor}`);
-    };
+  };
         
     // Pose presets
 const POSE_PRESETS = {
@@ -1654,6 +1674,12 @@ const POSE_PRESETS = {
         updateStatus("Left shoulder moved forward/back");
       });
 
+      document.getElementById("leftShoulderSideSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.leftUpperArm.rotation.y = value;
+        updateStatus("Left shoulder moved side");
+      });
+
       document.getElementById("leftElbowSlider").addEventListener('input', (e) => {
         const value = parseFloat(e.target.value);
         skeleton.leftLowerArm.rotation.z = Math.PI/2 + value;
@@ -1671,6 +1697,12 @@ const POSE_PRESETS = {
         const value = parseFloat(e.target.value);
         skeleton.rightUpperArm.rotation.x = value;
         updateStatus("Right shoulder moved forward/back");
+      });
+
+      document.getElementById("rightShoulderSideSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.rightUpperArm.rotation.y = value;
+        updateStatus("Right shoulder moved side");
       });
 
       document.getElementById("rightElbowSlider").addEventListener('input', (e) => {
