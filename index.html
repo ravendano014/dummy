@@ -56,7 +56,7 @@
       left: 20px;
       top: 20px;
       width: 280px;
-      max-height: 80vh;
+      max-height: 85vh;
       overflow-y: auto;
     }
     
@@ -64,7 +64,7 @@
       right: 20px;
       top: 20px;
       width: 280px;
-      max-height: 80vh;
+      max-height: 85vh;
       overflow-y: auto;
     }
     
@@ -80,6 +80,8 @@
       left: 370px;
       bottom: 20px;
       width: 250px;
+      max-height: 80vh;
+      overflow-y: auto;
     }
     
     
@@ -600,9 +602,6 @@
           </div>
           <input type="range" min="0" max="2.5" step="0.01" value="0" class="slider" id="leftElbowSlider">
         </div>
-      </div>
-
-      <div class="control-group">
         <h3><i class="fas fa-hand-paper"></i> Right Arm</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Move shoulder forward/back">
@@ -657,9 +656,6 @@
           </div>
           <input type="range" min="0.2" max="2.5" step="0.01" value="0" class="slider" id="leftFootTiltSlider">
         </div>
-      </div>
-
-      <div class="control-group">
         <h3><i class="fas fa-walking"></i> Right Leg</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Move hip forward/back">
@@ -675,6 +671,7 @@
           </div>
           <input type="range" min="-1" max="1" step="0.01" value="0" class="slider" id="rightHipSideSlider">
         </div>
+
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Bend knee">
             <span>Knee</span>
@@ -682,6 +679,7 @@
           </div>
           <input type="range" min="-0.2" max="3.0" step="0.01" value="0" class="slider" id="rightKneeSlider">
         </div>
+
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Tilt foot">
             <span>Foot Tilt</span>
@@ -689,10 +687,12 @@
           </div>
           <input type="range" min="0.2" max="2.5" step="0.01" value="0" class="slider" id="rightFootTiltSlider">
         </div>
+
+        <div class="reset-button-container">
+          <button class="reset-button" onclick="resetControls('limbControls')"><i class="fas fa-sync"></i> Reset Limbs</button>
+        </div>
       </div>
-      <div class="reset-button-container">
-        <button class="reset-button" onclick="resetControls('limbControls')"><i class="fas fa-sync"></i> Reset Limbs</button>
-      </div>
+      
     </div>
   </div>
   
@@ -756,9 +756,6 @@
                 <input type="range" min="0" max="1.5" step="0.01" value="0" class="slider" id="leftPinkyCurlSlider">
             </div>
         </div>
-      </div>
-
-      <div class="control-group">
         <h3><i class="fas fa-hand-point-right"></i> Right Hand</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Rotate wrist along Z-axis">
@@ -881,7 +878,7 @@
     let skeleton;
 
     // Pose presets
-    const POSE_PRESETS = {
+const POSE_PRESETS = {
       default: {
         spineRotationSlider: 0,
         spineBendSlider: 0,
@@ -921,47 +918,49 @@
         rightPinkyCurlSlider: 0
       },
       tpose: {
-        leftShoulderSlider: 0,
-        rightShoulderSlider: 0,
+        leftShoulderSlider: 1.5,
+        rightShoulderSlider: -1.5,
         leftElbowSlider: 0,
         rightElbowSlider: 0,
-        legsSpreadSlider: -0.5
+        legsSpreadSlider: -0.2
       },
       wave: {
-        leftShoulderSlider: 1.2,
-        leftElbowSlider: 1.8,
-        leftWristSlider: 0.3,
-        leftWristInSlider: 0.2,
-        leftFingerSpreadSlider: 0.2,
-        leftIndexCurlSlider: 0.5,
-        leftMiddleCurlSlider: 0.5,
-        leftRingCurlSlider: 0.5,
-        leftPinkyCurlSlider: 0.5
+        leftShoulderSlider: 1.5,
+        leftShoulderFrontSlider: -0.5,
+        leftElbowSlider: 1.5,
+        leftWristSlider: -0.5,
+        leftWristInSlider: 0.5,
+        leftFingerSpreadSlider: 0.2
       },
       walk: {
-        leftHipSlider: -0.8,
-        rightHipSlider: 0.8,
-        leftKneeSlider: 1.5,
-        rightKneeSlider: 0.2,
-        leftFootTiltSlider: 1.2,
-        rightFootTiltSlider: 0.5,
-        leftShoulderSlider: -0.5,
-        rightShoulderSlider: 0.5,
-        leftElbowSlider: 1.0,
-        rightElbowSlider: -1.0
+        leftHipSlider: -0.4,
+        rightHipSlider: 0.4,
+        leftKneeSlider: 0.5,
+        rightKneeSlider: 0.5,
+        leftShoulderFrontSlider: 0.2,
+        rightShoulderFrontSlider: -0.2,
+        leftShoulderSlider: -0.2,
+        rightShoulderSlider: 0.2,
+        leftElbowSlider: 0.5,
+        rightElbowSlider: -0.5,
+        spineTwistSlider: 0.1,
+        pelvisRotationSlider: -0.1
       },
       run: {
-        leftHipSlider: -1.2,
-        rightHipSlider: 1.2,
+        leftHipSlider: -1.0,
+        rightHipSlider: 1.0,
         leftKneeSlider: 2.0,
-        rightKneeSlider: 0.5,
+        rightKneeSlider: 0.8,
         leftFootTiltSlider: 1.5,
         rightFootTiltSlider: 0.8,
+        leftShoulderFrontSlider: 0.8,
+        rightShoulderFrontSlider: -0.8,
         leftShoulderSlider: -0.8,
         rightShoulderSlider: 0.8,
         leftElbowSlider: 1.5,
         rightElbowSlider: -1.5,
-        spineBendSlider: 0.2
+        spineBendSlider: 0.3,
+        pelvisTiltSlider: -0.2
       },
       sit: {
         leftHipSlider: -1.5,
@@ -969,29 +968,48 @@
         leftKneeSlider: 2.5,
         rightKneeSlider: 2.5,
         pelvisTiltSlider: 0.3,
-        spineBendSlider: 0.2
+        spineBendSlider: 0.2,
+        leftShoulderSlider: -0.2,
+        rightShoulderSlider: -0.2,
+        leftElbowSlider: 1.0,
+        rightElbowSlider: -1.0,
+        leftFootTiltSlider: 0,
+        rightFootTiltSlider: 0
       },
       fight: {
         leftShoulderSlider: 1.0,
-        leftElbowSlider: 1.5,
-        rightShoulderSlider: 0.5,
-        rightElbowSlider: -1.0,
+        leftElbowSlider: 2.0,
+        rightShoulderSlider: 1.0,
+        rightElbowSlider: -1.5,
         leftHipSlider: -0.5,
         rightHipSlider: 0.5,
-        legsSpreadSlider: 0.3,
-        spineTwistSlider: 0.2
+        leftKneeSlider: 0.8,
+        rightKneeSlider: 0.8,
+        spineTwistSlider: 0.3,
+        pelvisRotationSlider: 0.2,
+        leftFingerSpreadSlider: 0.1,
+        leftIndexCurlSlider: 1.5,
+        leftMiddleCurlSlider: 1.5,
+        leftRingCurlSlider: 1.5,
+        leftPinkyCurlSlider: 1.5,
+        rightFingerSpreadSlider: 0.1,
+        rightIndexCurlSlider: 1.5,
+        rightMiddleCurlSlider: 1.5,
+        rightRingCurlSlider: 1.5,
+        rightPinkyCurlSlider: 1.5
       },
       dance: {
-        leftShoulderSlider: 1.2,
-        rightShoulderSlider: -1.2,
-        leftElbowSlider: 1.5,
-        rightElbowSlider: -1.5,
-        leftHipSlider: -1.0,
-        rightHipSlider: 1.0,
-        leftKneeSlider: 1.0,
-        rightKneeSlider: 1.0,
-        pelvisRotationSlider: 0.3,
-        spineTwistSlider: 0.3,
+        leftShoulderSlider: 0.8,
+        rightShoulderSlider: -0.8,
+        leftElbowSlider: 1.0,
+        rightElbowSlider: -1.0,
+        leftHipSlider: -0.8,
+        rightHipSlider: 0.8,
+        leftKneeSlider: 1.2,
+        rightKneeSlider: 0.5,
+        pelvisRotationSlider: -0.5,
+        spineTwistSlider: 0.5,
+        headTiltSlider: 0.2,
         leftWristSlider: 0.3,
         rightWristSlider: -0.3
       }
