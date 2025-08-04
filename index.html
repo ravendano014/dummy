@@ -891,10 +891,15 @@
       groundTextureUrl: "https://raw.githubusercontent.com/ravendano014/dummy/refs/heads/main/Ground.jpg",
       boneColor: new BABYLON.Color3.FromHexString("#000000"),
       jointColor: new BABYLON.Color3.FromHexString("#000000"),
-      armorColor: new BABYLON.Color3.FromHexString("#d35400"),
+      armorColor: new BABYLON.Color3.FromHexString(RandColor()),
       armorHandsColor: new BABYLON.Color3.FromHexString("#000000"),
     };
 
+    function RandColor() {
+      const colores = ['#FFFFFF', '#199749', '#6864c3', '#213195', '#b51e18', '#f0601f', '#d0c829'];
+      const indiceAleatorio = Math.floor(Math.random() * colores.length);
+      return colores[indiceAleatorio];
+    }
     // Engine initialization
     const canvas = document.getElementById("renderCanvas");
     const engine = new BABYLON.Engine(canvas, true);
