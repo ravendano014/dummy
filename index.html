@@ -865,9 +865,10 @@
       rotationSpeed: 0.04,
       modelBaseUrl: "https://raw.githubusercontent.com/ravendano014/dummy/main/Individual%20parts%20-%20armor/",
       groundTextureUrl: "https://raw.githubusercontent.com/ravendano014/dummy/refs/heads/main/Ground.jpg",
-      boneColor: new BABYLON.Color3(0.8, 0.8, 0.8),
-      jointColor: new BABYLON.Color3(0.5, 0.5, 0.5),
-      armorColor: new BABYLON.Color3(0.3, 0.3, 0.3),
+      boneColor: new BABYLON.Color3.FromHexString("#000000"),
+      jointColor: new BABYLON.Color3.FromHexString("#000000"),
+      armorColor: new BABYLON.Color3.FromHexString("#d35400"),
+      armorHandsColor: new BABYLON.Color3.FromHexString("#000000"),
     };
 
     // Engine initialization
@@ -1151,7 +1152,7 @@ const POSE_PRESETS = {
         const hand = { wrist: wristJoint };
         const isLeft = side === 'left';
         const sign = isLeft ? 1 : -1;
-        const color = new BABYLON.Color3(0.4, 0.4, 0.4);
+        const color = new BABYLON.Color3.FromHexString("#000000");
 
         const createFinger = (name, parent, initialPos, boneLengths, rotationY = 0) => {
             const finger = {};
@@ -1199,8 +1200,8 @@ const POSE_PRESETS = {
         { name: "armor-shoulder-2x.stl", parent: skeletonBones.leftUpperArm, position: [-5, 0, 5], rotation: [0, Math.PI, Math.PI/2], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperArm, clonePosition: [5, 0, -5], cloneRotation: [Math.PI, -Math.PI, -Math.PI/2] },
         { name: "armor-upper-arm-2x.stl", parent: skeletonBones.leftUpperArm, position: [-16, 0, -3], rotation: [0, Math.PI/2, Math.PI/2], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperArm, clonePosition: [16, 0, 3], cloneRotation: [Math.PI, Math.PI/2, -Math.PI/2] },
         { name: "armor-forearm-2x.stl", parent: skeletonBones.rightLowerArm, position: [4, 20, 3], rotation: [Math.PI/2, Math.PI, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.leftLowerArm, clonePosition: [4, 20, 3], cloneRotation: [Math.PI/2, Math.PI, 0] },
-        { name: "hand-open-right.stl", parent: skeletonBones.rightWrist, position: [0, 8, 0], rotation: [-Math.PI/2, -Math.PI/2, 0], color: CONFIG.armorColor.asArray()}, 
-        { name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [2, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.armorColor.asArray()},
+        { name: "hand-open-right.stl", parent: skeletonBones.rightWrist, position: [0, 8, 0], rotation: [-Math.PI/2, -Math.PI/2, 0], color: CONFIG.armorHandsColor.asArray()}, 
+        { name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [2, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.armorHandsColor.asArray()},
         { name: "armor-hip-2x.stl", parent: skeletonBones.leftUpperLeg, position: [0, 0, -6], rotation: [0, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [0, 0, 5], cloneRotation: [0, Math.PI, 0] },
         { name: "armor-thigh-2x.stl", parent: skeletonBones.leftUpperLeg, position: [4, 0, 5], rotation: [0, -Math.PI/2, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [5, 0, 5], cloneRotation: [0, -Math.PI/2, Math.PI] },        
         { name: "armor-knee-2x.stl", parent: skeletonBones.leftKnee, position: [0, 5, 3], rotation: [Math.PI/2, Math.PI, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightKnee, clonePosition: [-5, 5, 3], cloneRotation: [Math.PI/2, Math.PI, Math.PI] },
