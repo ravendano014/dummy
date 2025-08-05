@@ -831,7 +831,7 @@
         <button class="pose-button" onclick="applyPose('walk')">Walk</button>
         <button class="pose-button" onclick="applyPose('run')">Run</button>
         <button class="pose-button" onclick="applyPose('sit')">Sit</button>
-        <button class="pose-button" onclick="applyPose('fight')">Fight</button>
+        <button class="pose-button" onclick="applyPose('jump')">Jump</button>
         <button class="pose-button" onclick="applyPose('dance')">Dance</button>
       </div>
       
@@ -1006,36 +1006,43 @@ const POSE_PRESETS = {
         rightIndexCurlSlider: 0,
         rightMiddleCurlSlider: 0,
         rightRingCurlSlider: 0,
-        rightPinkyCurlSlider: 0
+        rightPinkyCurlSlider: 0,
+        leftFootTiltSlider: 1.5,
+        rightFootTiltSlider: 1.5
       },
       tpose: {
-        leftShoulderSlider: 1.5,
-        rightShoulderSlider: -1.5,
+        leftShoulderSlider: -1.5,
+        rightShoulderSlider: 1.5,
         leftElbowSlider: 0,
         rightElbowSlider: 0,
         legsSpreadSlider: -0.2
       },
       wave: {
-        leftShoulderSlider: 1.5,
-        leftShoulderFrontSlider: -0.5,
-        leftElbowSlider: 1.5,
-        leftWristSlider: -0.5,
-        leftWristInSlider: 0.5,
-        leftFingerSpreadSlider: 0.2
+        leftShoulderSlider: -1,
+        rightShoulderSlider: 1,
+        leftElbowSlider: 0,
+        rightElbowSlider: 0,
+        legsSpreadSlider: -0.2,
+        rightElbowSlider: -1,
+        leftElbowSlider: 1,
+        leftFootTiltSlider: 1.5,
+        rightFootTiltSlider: 1.5
       },
       walk: {
         leftHipSlider: -0.4,
         rightHipSlider: 0.4,
         leftKneeSlider: 0.5,
         rightKneeSlider: 0.5,
-        leftShoulderFrontSlider: 0.2,
+        leftShoulderFrontSlider: 0.5,
         rightShoulderFrontSlider: -0.2,
         leftShoulderSlider: -0.2,
         rightShoulderSlider: 0.2,
         leftElbowSlider: 0.5,
         rightElbowSlider: -0.5,
         spineTwistSlider: 0.1,
-        pelvisRotationSlider: -0.1
+        pelvisRotationSlider: -0.1,
+        leftFootTiltSlider: 1.5,
+        rightFootTiltSlider: 1.5
       },
       run: {
         leftHipSlider: -1.0,
@@ -1048,7 +1055,7 @@ const POSE_PRESETS = {
         rightShoulderFrontSlider: -0.8,
         leftShoulderSlider: -0.8,
         rightShoulderSlider: 0.8,
-        leftElbowSlider: 1.5,
+        leftElbowSlider: 0,
         rightElbowSlider: -1.5,
         spineBendSlider: 0.3,
         pelvisTiltSlider: -0.2
@@ -1064,15 +1071,15 @@ const POSE_PRESETS = {
         rightShoulderSlider: -0.2,
         leftElbowSlider: 1.0,
         rightElbowSlider: -1.0,
-        leftFootTiltSlider: 0,
-        rightFootTiltSlider: 0
+        leftFootTiltSlider: 1.5,
+        rightFootTiltSlider: 1.5
       },
-      fight: {
-        leftShoulderSlider: 1.0,
-        leftElbowSlider: 2.0,
+      jump: {
+        leftShoulderSlider: -1.5,
+        leftElbowSlider: -3.0,
         rightShoulderSlider: 1.0,
         rightElbowSlider: -1.5,
-        leftHipSlider: -0.5,
+        leftHipSlider: -2.0,
         rightHipSlider: 0.5,
         leftKneeSlider: 0.8,
         rightKneeSlider: 0.8,
@@ -1090,10 +1097,8 @@ const POSE_PRESETS = {
         rightPinkyCurlSlider: 1.5
       },
       dance: {
-        leftShoulderSlider: 0.8,
-        rightShoulderSlider: -0.8,
-        leftElbowSlider: 1.0,
-        rightElbowSlider: -1.0,
+        leftShoulderSlider: -1.8,
+        rightShoulderSlider: 1,
         leftHipSlider: -0.8,
         rightHipSlider: 0.8,
         leftKneeSlider: 1.2,
