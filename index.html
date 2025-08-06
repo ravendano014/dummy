@@ -885,14 +885,16 @@
 
   <script>
     // Global configuration
+    var innerColor = RandColor(); 
+
     const CONFIG = {
       rotationSpeed: 0.04,
       modelBaseUrl: "https://raw.githubusercontent.com/ravendano014/dummy/main/Individual%20parts%20-%20armor/",
       groundTextureUrl: "https://raw.githubusercontent.com/ravendano014/dummy/refs/heads/main/Ground.jpg",
-      boneColor: new BABYLON.Color3.FromHexString("#000000"),
-      jointColor: new BABYLON.Color3.FromHexString("#000000"),
+      boneColor: new BABYLON.Color3.FromHexString(innerColor),
+      jointColor: new BABYLON.Color3.FromHexString(innerColor),
       armorColor: new BABYLON.Color3.FromHexString(RandColor()),
-      frameColor: new BABYLON.Color3.FromHexString("#000000"),
+      frameColor: new BABYLON.Color3.FromHexString(innerColor),
     };
 
     function RandColor() {
@@ -1247,7 +1249,7 @@ const POSE_PRESETS = {
         const hand = { wrist: wristJoint };
         const isLeft = side === 'left';
         const sign = isLeft ? 1 : -1;
-        const color = new BABYLON.Color3.FromHexString("#000000");
+        const color = new BABYLON.Color3.FromHexString(innerColor);
 
         const createFinger = (name, parent, initialPos, boneLengths, rotationY = 0) => {
             const finger = {};
