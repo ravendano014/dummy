@@ -56,7 +56,7 @@
       left: 20px;
       top: 20px;
       width: 280px;
-      max-height: 85vh;
+      max-height: 75vh;
       overflow-y: auto;
     }
     
@@ -64,7 +64,7 @@
       right: 20px;
       top: 20px;
       width: 280px;
-      max-height: 85vh;
+      max-height: 75vh;
       overflow-y: auto;
     }
     
@@ -74,18 +74,28 @@
       transform: translateX(-50%);
       width: 90%;
       max-width: 600px;
+      max-height: 75vh;
+      overflow-y: auto;
     }
 
     .control-panel.hands {
       left: 370px;
       bottom: 20px;
       width: 250px;
-      max-height: 80vh;
+      max-height: 75vh;
       overflow-y: auto;
     }
     
     .control-panel.right-bottom {
       right: 350px;
+      bottom: 20px;
+      width: 280px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .control-panel.hand-types {
+      right: 20px;
       bottom: 20px;
       width: 280px;
       max-height: 85vh;
@@ -877,6 +887,31 @@
     </div>
   </div>
 
+  <!-- Nuevo panel para selección de manos -->
+  <div class="control-panel hand-types" id="handTypeControls">
+    <div class="panel-header">
+      <h2><i class="fas fa-hand-paper"></i> Hand Types</h2>
+      <i class="fas fa-chevron-up collapse-icon"></i>
+    </div>
+    <div class="panel-content collapsed">
+      <div class="control-group">
+        <h3><i class="fas fa-hand-paper"></i> Left Hand</h3>
+        <div class="button-group" style="grid-template-columns: repeat(2, 1fr);">
+          <button class="button" onclick="changeHandType('left', 'open')"><i class="fas fa-hand-paper"></i> Open</button>
+          <button class="button" onclick="changeHandType('left', 'fist')"><i class="fas fa-hand-rock"></i> Fist</button>
+          <button class="button" onclick="changeHandType('left', 'grip')"><i class="fas fa-hand-holding"></i> Grip</button>
+        </div>
+      </div>
+      <div class="control-group">
+        <h3><i class="fas fa-hand-paper"></i> Right Hand</h3>
+        <div class="button-group" style="grid-template-columns: repeat(2, 1fr);">
+          <button class="button" onclick="changeHandType('right', 'open')"><i class="fas fa-hand-paper"></i> Open</button>
+          <button class="button" onclick="changeHandType('right', 'fist')"><i class="fas fa-hand-rock"></i> Fist</button>
+          <button class="button" onclick="changeHandType('right', 'grip')"><i class="fas fa-hand-holding"></i> Grip</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="status-label" id="statusLabel">
     <i class="fas fa-circle-notch fa-spin"></i>
@@ -886,6 +921,10 @@
   <script>
     // Global configuration
     var innerColor = RandColor(); 
+    var currentHands = {
+      left: 'open',
+      right: 'open'
+    };
 
     const CONFIG = {
       rotationSpeed: 0.04,
@@ -909,69 +948,109 @@
     let statusTimeout;
     let skeleton;
 
-  // Function to change armor color
-  const applyArmorColorToMesh = (mesh, color) => {
-      if (!mesh) return;
-      
-      // Si la malla ya tiene un material, lo reutilizamos en lugar de crear uno nuevo
-      let mat = mesh.material;
-      
-      if (!mat || mat.isFrozen) {
-          // Si no hay material o está congelado, creamos uno nuevo
-          mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
-          mesh.material = mat;
-      }
-      
-      mat.diffuseColor = color;
-      mat.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-      
-      // No congelamos el material para permitir futuras modificaciones
-      // mat.freeze();
-  };
-
-  const changeArmorColor = (hexColor) => {
-      CONFIG.armorColor = BABYLON.Color3.FromHexString(hexColor);
-      
-      // Lista de todas las piezas de armadura que deben cambiar de color
-      const armorMeshes = [
-          "armor-head.stl", "armor-neck.stl", "armor-abdomen.stl", 
-          "armor-outer-chest.stl", "armor-waist.stl", "armor-crotch.stl",
-          "armor-shoulder-2x.stl", "armor-upper-arm-2x.stl", "armor-forearm-2x.stl",
-          "armor-hip-2x.stl", "armor-thigh-2x.stl", "armor-knee-2x.stl",
-          "armor-shin-2x.stl", "armor-foot-2x.stl", "armor-toe-2x.stl",
-          // Agregar cualquier otra pieza de armadura que pueda faltar
-          "hand-open-right.stl", "hand-open-left.stl" // Si también quieres que cambien las manos
-      ];
-
-      armorMeshes.forEach(modelName => {
-          // Aplicar a la malla principal
-          const mesh = scene.getMeshByName(modelName);
+    // Function to change armor color
+    const applyArmorColorToMesh = (mesh, color) => {
+        if (!mesh) return;
         
-          if (mesh) {
-              applyArmorColorToMesh(mesh, CONFIG.armorColor);
-          }
-          
-          // Aplicar a clones (si existen)
-          const clonedMesh = scene.getMeshByName(modelName + "_clone");
-          if (clonedMesh) {
-              applyArmorColorToMesh(clonedMesh, CONFIG.armorColor);
-          }
-          
-          // Aplicar a cualquier otra variación que pueda existir
-          // Por ejemplo, si hay versiones con sufijos diferentes
-          const variations = scene.meshes.filter(m => m.name.startsWith(modelName.replace('.stl', '')));
-          variations.forEach(variation => {
-              if (variation !== mesh && variation !== clonedMesh) {
-                  applyArmorColorToMesh(variation, CONFIG.armorColor);
-              }
-          });
-      });
-
-      updateStatus(`Armor color changed to ${hexColor}`);
-  };
+        let mat = mesh.material;
         
+        if (!mat || mat.isFrozen) {
+            mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
+            mesh.material = mat;
+        }
+        
+        mat.diffuseColor = color;
+        mat.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+    };
+
+    const changeArmorColor = (hexColor) => {
+        CONFIG.armorColor = BABYLON.Color3.FromHexString(hexColor);
+        
+        // Lista de todas las piezas de armadura que deben cambiar de color
+        const armorMeshes = [
+            "armor-head.stl", "armor-neck.stl", "armor-abdomen.stl", 
+            "armor-outer-chest.stl", "armor-waist.stl", "armor-crotch.stl",
+            "armor-shoulder-2x.stl", "armor-upper-arm-2x.stl", "armor-forearm-2x.stl",
+            "armor-hip-2x.stl", "armor-thigh-2x.stl", "armor-knee-2x.stl",
+            "armor-shin-2x.stl", "armor-foot-2x.stl", "armor-toe-2x.stl",
+            // Manos (todas las variantes)
+            "hand-open-right.stl", "hand-open-left.stl",
+            "hand-fist-right.stl", "hand-fist-left.stl",
+            "hand-grip-right.stl", "hand-grip-left.stl"
+        ];
+
+        armorMeshes.forEach(modelName => {
+            const mesh = scene.getMeshByName(modelName);
+            if (mesh) {
+                applyArmorColorToMesh(mesh, CONFIG.armorColor);
+            }
+            
+            const clonedMesh = scene.getMeshByName(modelName + "_clone");
+            if (clonedMesh) {
+                applyArmorColorToMesh(clonedMesh, CONFIG.armorColor);
+            }
+            
+            const variations = scene.meshes.filter(m => m.name.startsWith(modelName.replace('.stl', '')));
+            variations.forEach(variation => {
+                if (variation !== mesh && variation !== clonedMesh) {
+                    applyArmorColorToMesh(variation, CONFIG.armorColor);
+                }
+            });
+        });
+
+        updateStatus(`Armor color changed to ${hexColor}`);
+    };
+
+    // Función para cambiar el tipo de mano
+    const changeHandType = (side, type) => {
+        if (currentHands[side] === type) return;
+        
+        const oldHandName = `hand-${currentHands[side]}-${side}.stl`;
+        const newHandName = `hand-${type}-${side}.stl`;
+        
+        // Eliminar la mano anterior
+        const oldHand = scene.getMeshByName(oldHandName);
+        if (oldHand) {
+            oldHand.dispose();
+        }
+        
+        // Cargar la nueva mano
+        BABYLON.SceneLoader.ImportMesh(
+            "",
+            CONFIG.modelBaseUrl,
+            newHandName,
+            scene,
+            (newMeshes) => {
+                const newHand = newMeshes[0];
+                const wristBone = side === 'left' ? skeleton.leftWrist : skeleton.rightWrist;
+                
+                // Configuración de posición/rotación según el lado
+                if (side === 'left') {
+                    newHand.position = new BABYLON.Vector3(-1, 8, 0);
+                    newHand.rotation = new BABYLON.Vector3(-Math.PI/2, Math.PI/2, 0);
+                } else {
+                    newHand.position = new BABYLON.Vector3(0, 8, 0);
+                    newHand.rotation = new BABYLON.Vector3(-Math.PI/2, -Math.PI/2, 0);
+                }
+                
+                newHand.parent = wristBone;
+                newHand.name = newHandName;
+                
+                // Aplicar color actual
+                applyArmorColorToMesh(newHand, CONFIG.armorColor);
+                
+                currentHands[side] = type;
+                updateStatus(`Changed ${side} hand to ${type}`);
+            },
+            null,
+            (scene, message, exception) => {
+                updateStatus(`Error loading ${newHandName}: ${message}`, true);
+            }
+        );
+    };
+
     // Pose presets
-const POSE_PRESETS = {
+    const POSE_PRESETS = {
       default: {
         spineRotationSlider: 0,
         spineBendSlider: 0,
@@ -1308,8 +1387,8 @@ const POSE_PRESETS = {
         { name: "frame-upper-arm-2x.stl", parent: skeletonBones.leftUpperArm, position: [-15, 2, 0], rotation: [0, Math.PI/2, 0], color: CONFIG.frameColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperArm, clonePosition: [15, 1, -1], cloneRotation: [0, -Math.PI/2, 0] },   
         { name: "armor-forearm-2x.stl", parent: skeletonBones.rightLowerArm, position: [4, 20, 3], rotation: [Math.PI/2, Math.PI, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.leftLowerArm, clonePosition: [4, 20, 3], cloneRotation: [Math.PI/2, Math.PI, 0] },
         { name: "frame-forearm-2x.stl", parent: skeletonBones.leftLowerArm, position: [0, 7, -3], rotation: [Math.PI/2, 0, 0], color: CONFIG.frameColor.asArray(), isClone: true, cloneParent: skeletonBones.rightLowerArm, clonePosition: [0, 8, -4], cloneRotation: [Math.PI/2, 0, 0] },   
-        { name: "hand-open-right.stl", parent: skeletonBones.rightWrist, position: [0, 8, 0], rotation: [-Math.PI/2, -Math.PI/2, 0], color: CONFIG.frameColor.asArray()}, 
-        { name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [-1, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.frameColor.asArray()},
+        //{ name: "hand-open-right.stl", parent: skeletonBones.rightWrist, position: [0, 8, 0], rotation: [-Math.PI/2, -Math.PI/2, 0], color: CONFIG.frameColor.asArray()}, 
+        //{ name: "hand-open-left.stl", parent: skeletonBones.leftWrist, position: [-1, 8, 0], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.frameColor.asArray()},
         { name: "armor-hip-2x.stl", parent: skeletonBones.leftUpperLeg, position: [0, -4, -7], rotation: [0, 0, 0], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [0, -4, 5], cloneRotation: [0, Math.PI, 0] },
         { name: "armor-thigh-2x.stl", parent: skeletonBones.leftUpperLeg, position: [4, -4, 5], rotation: [0, -Math.PI/2, Math.PI], color: CONFIG.armorColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [5, -4, 5], cloneRotation: [0, -Math.PI/2, Math.PI] },        
         { name: "frame-hip-and-shoulder-4x.stl", parent: skeletonBones.leftUpperLeg, position: [2, 5, -2], rotation: [-Math.PI/2, Math.PI/2, 0], color: CONFIG.frameColor.asArray(), isClone: true, cloneParent: skeletonBones.rightUpperLeg, clonePosition: [3, 5, -2], cloneRotation: [-Math.PI/2, Math.PI/2, 0] }, 
@@ -1959,6 +2038,8 @@ const POSE_PRESETS = {
           skeletonRoot.position.y = -minY;
         }
         updateStatus("Skeleton positioned correctly");
+        changeHandType('left', 'fist');
+        changeHandType('right', 'fist');
       });
 
       setupSkeletonControls(skeleton);
