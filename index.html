@@ -1308,13 +1308,13 @@
       skeleton.leftShoulder = createJoint("leftShoulder", 5, 
         new BABYLON.Vector3(-5, -8, 0), skeleton.spineUpper, scene);
       
-      skeleton.leftUpperArm = createBone("leftUpperArm", 15, 3, 
+      skeleton.leftUpperArm = createBone("leftUpperArm", 5, 3, 
         new BABYLON.Vector3(-7.5, 0, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftShoulder, scene);
       
       skeleton.leftElbow = createJoint("leftElbow", 4, 
         new BABYLON.Vector3(-15, 4, 0), skeleton.leftUpperArm, scene);
       
-      skeleton.leftLowerArm = createBone("leftLowerArm", 15, 2.5, 
+      skeleton.leftLowerArm = createBone("leftLowerArm", 5, 2.5, 
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftElbow, scene);
       
       skeleton.leftWrist = createJoint("leftWrist", 3, 
@@ -1324,13 +1324,13 @@
       skeleton.rightShoulder = createJoint("rightShoulder", 5, 
         new BABYLON.Vector3(5, -8, 0), skeleton.spineUpper, scene);
       
-      skeleton.rightUpperArm = createBone("rightUpperArm", 15, 3, 
+      skeleton.rightUpperArm = createBone("rightUpperArm", 5, 3, 
         new BABYLON.Vector3(7.5, 0, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightShoulder, scene);
       
       skeleton.rightElbow = createJoint("rightElbow", 4, 
         new BABYLON.Vector3(15, 4, 0), skeleton.rightUpperArm, scene);
       
-      skeleton.rightLowerArm = createBone("rightLowerArm", 15, 2.5, 
+      skeleton.rightLowerArm = createBone("rightLowerArm", 5, 2.5, 
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightElbow, scene);
       
       skeleton.rightWrist = createJoint("rightWrist", 3, 
