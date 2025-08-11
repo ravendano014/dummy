@@ -1057,10 +1057,10 @@
                 
                 // Configuración de posición/rotación según el lado
                 if (side === 'left') {
-                    newHand.position = new BABYLON.Vector3(-1, 8, 0);
+                    newHand.position = new BABYLON.Vector3(-1, 0, 0);
                     newHand.rotation = new BABYLON.Vector3(-Math.PI/2, Math.PI/2, 0);
                 } else {
-                    newHand.position = new BABYLON.Vector3(0, 8, 0);
+                    newHand.position = new BABYLON.Vector3(0, 0, 0);
                     newHand.rotation = new BABYLON.Vector3(-Math.PI/2, -Math.PI/2, 0);
                 }
                 
@@ -1318,7 +1318,7 @@
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, Math.PI/2), skeleton.leftElbow, scene);
       
       skeleton.leftWrist = createJoint("leftWrist", 3, 
-        new BABYLON.Vector3(2, 15, 0), skeleton.leftLowerArm, scene);
+        new BABYLON.Vector3(2, 22, 0), skeleton.leftLowerArm, scene);
       
       // Right arm (mirror of left)
       skeleton.rightShoulder = createJoint("rightShoulder", 5, 
@@ -1334,7 +1334,7 @@
         new BABYLON.Vector3(0, 0, 0), new BABYLON.Vector3(0, 0, -Math.PI/2), skeleton.rightElbow, scene);
       
       skeleton.rightWrist = createJoint("rightWrist", 3, 
-        new BABYLON.Vector3(-1, 15, 0), skeleton.rightLowerArm, scene);
+        new BABYLON.Vector3(-1, 22, 0), skeleton.rightLowerArm, scene);
       
       // Legs
       skeleton.leftHip = createJoint("leftHip", 5, 
@@ -1398,17 +1398,17 @@
         };
 
         // Palm bone to attach fingers
-        const palmBone = createBone(`${side}Palm`, 10, 5, new BABYLON.Vector3(-1 * sign, -3, 0), new BABYLON.Vector3(Math.PI / 2, 0, 0), wristJoint, scene, color);
+        const palmBone = createBone(`${side}Palm`, 5, 5, new BABYLON.Vector3(-1 * sign, -3, 0), new BABYLON.Vector3(Math.PI / 2, 0, 0), wristJoint, scene, color);
 
         // Thumb
-        hand.thumb1 = createBone(`${side}Thumb1`, 5, 2, new BABYLON.Vector3(-8 * sign, 0, 0), new BABYLON.Vector3(Math.PI/2, Math.PI/4 * sign, 0), palmBone, scene, color);
-        hand.thumb2 = createBone(`${side}Thumb2`, 5, 1.5, new BABYLON.Vector3(5, 0, 0), new BABYLON.Vector3(0, 0, 0), hand.thumb1, scene, color);
+        //hand.thumb1 = createBone(`${side}Thumb1`, 5, 2, new BABYLON.Vector3(-8 * sign, 0, 0), new BABYLON.Vector3(Math.PI/2, Math.PI/4 * sign, 0), palmBone, scene, color);
+        //hand.thumb2 = createBone(`${side}Thumb2`, 5, 1.5, new BABYLON.Vector3(5, 0, 0), new BABYLON.Vector3(0, 0, 0), hand.thumb1, scene, color);
 
         // Fingers
-        hand.Index = createFinger('Index', palmBone, { x: -2, y: -4, z: 0 }, [6, 4, 3, 2], 0.1);
-        hand.Middle = createFinger('Middle', palmBone, { x: -2, y: -4, z: 0 }, [7, 5, 4, 3], 0);
-        hand.Ring = createFinger('Ring', palmBone, { x: -2, y: -4, z: 0 }, [6, 4, 3, 2], -0.1);
-        hand.Pinky = createFinger('Pinky', palmBone, { x: -2, y: -4, z: 0 }, [5, 3, 2, 1], -0.2);
+        //hand.Index = createFinger('Index', palmBone, { x: -2, y: -4, z: 0 }, [6, 4, 3, 2], 0.1);
+        //hand.Middle = createFinger('Middle', palmBone, { x: -2, y: -4, z: 0 }, [7, 5, 4, 3], 0);
+        //hand.Ring = createFinger('Ring', palmBone, { x: -2, y: -4, z: 0 }, [6, 4, 3, 2], -0.1);
+        //hand.Pinky = createFinger('Pinky', palmBone, { x: -2, y: -4, z: 0 }, [5, 3, 2, 1], -0.2);
 
         return hand;
     };
