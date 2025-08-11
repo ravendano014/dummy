@@ -915,6 +915,14 @@
           <button class="button" onclick="changeArmorColor('#FFFFFF')" style="background: #FFFFFF; color: #333;">White</button>
         </div>
       </div>
+      <div class="control-group">
+        <h3><i class="fas fa-texture"></i> Armor Texture</h3>
+        <div class="button-group" style="grid-template-columns: repeat(2, 1fr);">
+          <button class="button" onclick="changeArmorTexture('matte')"><i class="fas fa-square"></i> Matte</button>
+          <button class="button" onclick="changeArmorTexture('metallic')"><i class="fas fa-gem"></i> Metallic</button>
+          <button class="button" onclick="changeArmorTexture('transparent')"><i class="fas fa-glass-whiskey"></i> Transparent</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -965,6 +973,7 @@
       jointColor: new BABYLON.Color3.FromHexString(innerColor),
       armorColor: new BABYLON.Color3.FromHexString(RandColor()),
       frameColor: new BABYLON.Color3.FromHexString(innerColor),
+      currentTextureType: 'matte' // Default texture type
     };
 
     function RandColor() {
@@ -979,25 +988,15 @@
     let statusTimeout;
     let skeleton;
 
-    // Function to change armor color
-    const applyArmorColorToMesh = (mesh, color) => {
-        if (!mesh) return;
-        
-        let mat = mesh.material;
-        
-        if (!mat || mat.isFrozen) {
-            mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
-            mesh.material = mat;
-        }
-        
-        mat.diffuseColor = color;
-        mat.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+    // Function to change armor texture type
+    const changeArmorTexture = (type) => {
+        CONFIG.currentTextureType = type;
+        updateAllArmorMaterials();
+        updateStatus(`Armor texture changed to ${type}`);
     };
 
-    const changeArmorColor = (hexColor) => {
-        CONFIG.armorColor = BABYLON.Color3.FromHexString(hexColor);
-        
-        // Lista de todas las piezas de armadura que deben cambiar de color
+    // Function to update all armor materials with current texture settings
+    const updateAllArmorMaterials = () => {
         const armorMeshes = [
             "armor-head.stl", "armor-neck.stl", "armor-abdomen.stl", 
             "armor-outer-chest.stl", "armor-waist.stl", "armor-crotch.stl",
@@ -1028,7 +1027,44 @@
                 }
             });
         });
+    };
 
+    // Function to apply armor color with current texture settings
+    const applyArmorColorToMesh = (mesh, color) => {
+        if (!mesh) return;
+        
+        let mat = mesh.material;
+        
+        if (!mat || mat.isFrozen) {
+            mat = new BABYLON.StandardMaterial(mesh.name + "_armorMat", scene);
+            mesh.material = mat;
+        }
+        
+        mat.diffuseColor = color;
+        
+        // Apply texture properties based on current type
+        switch(CONFIG.currentTextureType) {
+            case 'matte':
+                mat.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+                mat.alpha = 1.0;
+                break;
+            case 'metallic':
+                mat.specularColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+                mat.metallic = 0.9;
+                mat.roughness = 0.1;
+                mat.alpha = 1.0;
+                break;
+            case 'transparent':
+                mat.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+                mat.alpha = 0.7;
+                mat.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+                break;
+        }
+    };
+
+    const changeArmorColor = (hexColor) => {
+        CONFIG.armorColor = BABYLON.Color3.FromHexString(hexColor);
+        updateAllArmorMaterials();
         updateStatus(`Armor color changed to ${hexColor}`);
     };
 
@@ -1501,6 +1537,26 @@
       
       const material = new BABYLON.StandardMaterial("importedMeshMaterial", scene);
       material.diffuseColor = new BABYLON.Color3(...config.color);
+      
+      // Apply current texture settings
+      switch(CONFIG.currentTextureType) {
+          case 'matte':
+              material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
+              material.alpha = 1.0;
+              break;
+          case 'metallic':
+              material.specularColor = new BABYLON.Color3(0.8, 0.8, 0.8);
+              material.metallic = 0.9;
+              material.roughness = 0.1;
+              material.alpha = 1.0;
+              break;
+          case 'transparent':
+              material.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+              material.alpha = 0.7;
+              material.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+              break;
+      }
+      
       mesh.material = material;
       material.freeze();
       
