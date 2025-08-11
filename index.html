@@ -69,17 +69,17 @@
     }
     
     .control-panel.bottom {
-      left: 50%;
+      left: 35%;
       bottom: 20px;
       transform: translateX(-50%);
       width: 90%;
-      max-width: 600px;
+      max-width: 300px;
       max-height: 75vh;
       overflow-y: auto;
     }
 
     .control-panel.hands {
-      left: 370px;
+      left: 20px;
       bottom: 20px;
       width: 250px;
       max-height: 75vh;
@@ -553,6 +553,18 @@
         </div>
       </div>
 
+      <!-- Nuevo control para rotación Y de cabeza -->
+      <div class="control-group">
+        <h3><i class="fas fa-undo-alt"></i> Head Rotation</h3>
+        <div class="slider-container">
+          <div class="slider-label" data-tooltip="Rotate head along Y-axis">
+            <span>Y-Axis Rotation</span>
+            <span class="slider-value" data-target="headRotationSlider">0.00</span>
+          </div>
+          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="headRotationSlider">
+        </div>
+      </div>
+
       <div class="control-group">
         <h3><i class="fas fa-undo-alt"></i> Pelvis Controls</h3>
         <div class="slider-container">
@@ -717,11 +729,21 @@
         <h3><i class="fas fa-hand-point-left"></i> Left Hand</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Rotate wrist along Z-axis">
-            <span>Wrist Rotation</span>
+            <span>Wrist Z Rotation</span>
             <span class="slider-value" data-target="leftWristSlider">0.00</span>
           </div>
           <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="leftWristSlider">
         </div>
+        
+        <!-- Nuevo control para rotación Y de muñeca izquierda -->
+        <div class="slider-container">
+          <div class="slider-label" data-tooltip="Rotate wrist along Y-axis">
+            <span>Wrist Y Rotation</span>
+            <span class="slider-value" data-target="leftWristYSlider">0.00</span>
+          </div>
+          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="leftWristYSlider">
+        </div>
+        
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Move wrist in/out">
             <span>Wrist In/Out</span>
@@ -770,11 +792,21 @@
         <h3><i class="fas fa-hand-point-right"></i> Right Hand</h3>
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Rotate wrist along Z-axis">
-            <span>Wrist Rotation</span>
+            <span>Wrist Z Rotation</span>
             <span class="slider-value" data-target="rightWristSlider">0.00</span>
           </div>
           <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="rightWristSlider">
         </div>
+        
+        <!-- Nuevo control para rotación Y de muñeca derecha -->
+        <div class="slider-container">
+          <div class="slider-label" data-tooltip="Rotate wrist along Y-axis">
+            <span>Wrist Y Rotation</span>
+            <span class="slider-value" data-target="rightWristYSlider">0.00</span>
+          </div>
+          <input type="range" min="-1.0" max="1.0" step="0.01" value="0" class="slider" id="rightWristYSlider">
+        </div>
+        
         <div class="slider-container">
           <div class="slider-label" data-tooltip="Move wrist in/out">
             <span>Wrist In/Out</span>
@@ -827,7 +859,7 @@
     </div>
   </div>
   
-  <div class="control-panel bottom" id="poseControls" style="bottom: 120px;">
+  <div class="control-panel bottom" id="poseControls" style="bottom: 20px;">
     <div class="panel-header">
       <h2><i class="fas fa-robot"></i> Pose Presets</h2>
       <i class="fas fa-chevron-up collapse-icon"></i>
@@ -1055,15 +1087,18 @@
         spineBendSlider: 0,
         spineTwistSlider: 0,
         headTiltSlider: 0,
+        headRotationSlider: 0,
         pelvisTiltSlider: 0,
         pelvisSideTiltSlider: 0,
         pelvisRotationSlider: 0,
         legsSpreadSlider: 0,
         leftShoulderFrontSlider: 0,
         leftShoulderSlider: 0,
+        leftShoulderSideSlider: 0,
         leftElbowSlider: 0,
         rightShoulderFrontSlider: 0,
         rightShoulderSlider: 0,
+        rightShoulderSideSlider: 0,
         rightElbowSlider: 0,
         leftHipSlider: 0,
         leftHipSideSlider: 0,
@@ -1074,6 +1109,7 @@
         rightKneeSlider: 0,
         rightFootTiltSlider: 0,
         leftWristSlider: 0,
+        leftWristYSlider: 0,
         leftWristInSlider: 0,
         leftFingerSpreadSlider: 0,
         leftIndexCurlSlider: 0,
@@ -1081,6 +1117,7 @@
         leftRingCurlSlider: 0,
         leftPinkyCurlSlider: 0,
         rightWristSlider: 0,
+        rightWristYSlider: 0,
         rightWristInSlider: 0,
         rightFingerSpreadSlider: 0,
         rightIndexCurlSlider: 0,
@@ -1095,7 +1132,10 @@
         rightShoulderSlider: 1.5,
         leftElbowSlider: 0,
         rightElbowSlider: 0,
-        legsSpreadSlider: -0.2
+        legsSpreadSlider: -0.2,
+        headRotationSlider: 0,
+        leftWristYSlider: 0,
+        rightWristYSlider: 0
       },
       wave: {
         leftShoulderSlider: -1,
@@ -1106,7 +1146,10 @@
         rightElbowSlider: -1,
         leftElbowSlider: 1,
         leftFootTiltSlider: 1.5,
-        rightFootTiltSlider: 1.5
+        rightFootTiltSlider: 1.5,
+        headRotationSlider: 0,
+        leftWristYSlider: 0,
+        rightWristYSlider: 0
       },
       walk: {
         leftHipSlider: -0.4,
@@ -1122,7 +1165,10 @@
         spineTwistSlider: 0.1,
         pelvisRotationSlider: -0.1,
         leftFootTiltSlider: 1.5,
-        rightFootTiltSlider: 1.5
+        rightFootTiltSlider: 1.5,
+        headRotationSlider: 0,
+        leftWristYSlider: 0,
+        rightWristYSlider: 0
       },
       run: {
         leftHipSlider: -1.0,
@@ -1138,7 +1184,10 @@
         leftElbowSlider: 0,
         rightElbowSlider: -1.5,
         spineBendSlider: 0.3,
-        pelvisTiltSlider: -0.2
+        pelvisTiltSlider: -0.2,
+        headRotationSlider: 0,
+        leftWristYSlider: 0,
+        rightWristYSlider: 0
       },
       sit: {
         leftHipSlider: -1.5,
@@ -1152,7 +1201,10 @@
         leftElbowSlider: 1.0,
         rightElbowSlider: -1.0,
         leftFootTiltSlider: 1.5,
-        rightFootTiltSlider: 1.5
+        rightFootTiltSlider: 1.5,
+        headRotationSlider: 0,
+        leftWristYSlider: 0,
+        rightWristYSlider: 0
       },
       jump: {
         leftShoulderSlider: -1.5,
@@ -1174,7 +1226,10 @@
         rightIndexCurlSlider: 1.5,
         rightMiddleCurlSlider: 1.5,
         rightRingCurlSlider: 1.5,
-        rightPinkyCurlSlider: 1.5
+        rightPinkyCurlSlider: 1.5,
+        headRotationSlider: 0,
+        leftWristYSlider: 0,
+        rightWristYSlider: 0
       },
       dance: {
         leftShoulderSlider: -1.8,
@@ -1186,8 +1241,11 @@
         pelvisRotationSlider: -0.5,
         spineTwistSlider: 0.5,
         headTiltSlider: 0.2,
+        headRotationSlider: 0.3,
         leftWristSlider: 0.3,
-        rightWristSlider: -0.3
+        leftWristYSlider: 0.2,
+        rightWristSlider: -0.3,
+        rightWristYSlider: -0.2
       }
     };
 
@@ -1740,6 +1798,13 @@
         updateStatus("Head tilted");
       });
 
+      // Nuevo control para rotación Y de cabeza
+      document.getElementById("headRotationSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        skeleton.neck.rotation.y = value;
+        updateStatus("Head rotated Y-axis");
+      });
+
       // Nuevos controles para la pelvis
       document.getElementById("pelvisTiltSlider").addEventListener('input', (e) => {
         const value = parseFloat(e.target.value);
@@ -1891,6 +1956,24 @@
         if (skeleton.rightHand.wrist) {
             skeleton.rightHand.wrist.rotation.z = -value;
             updateStatus("Right wrist rotated");
+        }
+      });
+
+      // Nuevo control para rotación Y de muñeca izquierda
+      document.getElementById("leftWristYSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        if (skeleton.leftHand.wrist) {
+            skeleton.leftHand.wrist.rotation.y = value;
+            updateStatus("Left wrist rotated Y-axis");
+        }
+      });
+
+      // Nuevo control para rotación Y de muñeca derecha
+      document.getElementById("rightWristYSlider").addEventListener('input', (e) => {
+        const value = parseFloat(e.target.value);
+        if (skeleton.rightHand.wrist) {
+            skeleton.rightHand.wrist.rotation.y = -value; // Invertido para lado derecho
+            updateStatus("Right wrist rotated Y-axis");
         }
       });
 
