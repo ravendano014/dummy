@@ -965,6 +965,11 @@
       right: 'open'
     };
 
+    // Función para decidir aleatoriamente si la armadura será transparente
+    function shouldBeTransparent() {
+      return Math.random() < 0.3; // 30% de probabilidad de ser transparente
+    }
+
     const CONFIG = {
       rotationSpeed: 0.04,
       modelBaseUrl: "https://raw.githubusercontent.com/ravendano014/dummy/main/Individual%20parts%20-%20armor/",
@@ -973,7 +978,7 @@
       jointColor: new BABYLON.Color3.FromHexString(innerColor),
       armorColor: new BABYLON.Color3.FromHexString(RandColor()),
       frameColor: new BABYLON.Color3.FromHexString(innerColor),
-      currentTextureType: 'matte' // Default texture type
+      currentTextureType: shouldBeTransparent() ? 'transparent' : 'matte' // Aleatorio al cargar
     };
 
     function RandColor() {
@@ -1058,6 +1063,8 @@
                 mat.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
                 mat.alpha = 0.7;
                 mat.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+                mat.backFaceCulling = false;
+                mat.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
                 break;
         }
     };
@@ -1538,7 +1545,7 @@
       const material = new BABYLON.StandardMaterial("importedMeshMaterial", scene);
       material.diffuseColor = new BABYLON.Color3(...config.color);
       
-      // Apply current texture settings
+      // Aplicar configuración de textura actual
       switch(CONFIG.currentTextureType) {
           case 'matte':
               material.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
@@ -1554,6 +1561,8 @@
               material.specularColor = new BABYLON.Color3(0.5, 0.5, 0.5);
               material.alpha = 0.7;
               material.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
+              material.backFaceCulling = false;
+              material.transparencyMode = BABYLON.Material.MATERIAL_ALPHABLEND;
               break;
       }
       
